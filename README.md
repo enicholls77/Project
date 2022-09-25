@@ -35,7 +35,7 @@ If you plan to use Visual Studio 17 2022, like I do, make sure to [install it](h
 
 `./build.bat`
 
-### Linux (might work on MacOS as well) (x86) (WIP):
+### Linux (x86) (WIP):
 - Install [Conan](https://docs.conan.io/en/latest/installation.html)
 - Follow the [Getting Started](https://docs.conan.io/en/latest/getting_started.html) guide
 
@@ -52,3 +52,21 @@ This will allow conan to install system dependencies automatically
 `./build.sh`
 
 ### MacOS (M1 - ARM) (WIP):
+- Install [Homebrew](https://brew.sh/)
+
+```
+brew install conan
+conan profile new default --detect
+```
+- Change the following settings in the default profile (at `~/.conan/profiles/default`)
+```
+arch=armv8
+arch_build=armv8
+```
+- Run build (will fail) and copy files all `.dylib` files from `./build/bin` to `/usr/local/lib`, 
+then attempt to build again.
+```
+./build.sh
+sudo cp build/bin/*.dylib /usr/local/lib/
+./build.sh
+```

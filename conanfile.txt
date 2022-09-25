@@ -1,5 +1,11 @@
 [requires]
 sfml/2.5.1
 
+[options]
+sfml:shared=True
+
 [generators]
 cmake
+
+[imports]
+lib, *.dylib* -> ./bin
