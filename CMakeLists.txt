@@ -6,5 +6,5 @@
  include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
  conan_basic_setup()
 
- add_executable(run run.cpp)
- target_link_libraries(run ${CONAN_LIBS})
+ add_executable(idleminer src/main.cpp)
+ target_link_libraries(idleminer ${CONAN_LIBS})
