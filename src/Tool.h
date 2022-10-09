@@ -1,4 +1,5 @@
-
+#ifndef TOOL_H
+#define TOOL_H
 
 class Tool {
 
@@ -14,3 +15,5 @@ class Tool {
     virtual double getMiningMultiplier() = 0;
 
 };
+
+#endif //TOOL_H

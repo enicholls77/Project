@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "Worker.h"
 #include "Game.h"
 
@@ -9,6 +11,10 @@ Game::Game(){
     tick = 0;
     tickLimit = 2400;
     ticksPerSecond = 1; 
+
+    Worker* worker;
+    worker = new Worker(5);
+    workers.push_back(worker);
 }
 
 Game::Game(int _tickLimit, int _ticksPerSecond){ // constructor for setting custom params;
@@ -20,8 +26,8 @@ Game::Game(int _tickLimit, int _ticksPerSecond){ // constructor for setting cust
 void Game::nextTick(){ // moves the game forward in time, and calls mine() on all miners. Is called in main() loop;
     int len = workers.size();
     int mined = 0;
+
     for(int i=0; i<len; i++){
-        mined += workers[i]->mine();
         mined += workers[i]->mine();
     }
 
@@ -33,4 +39,8 @@ void Game::nextTick(){ // moves the game forward in time, and calls mine() on al
 
 int Game::day(){ // returns day passed (24 ticks is one day)
     return floor(tick / 24);
+}
+
+Game::~Game(){
+    workers.clear();
 }

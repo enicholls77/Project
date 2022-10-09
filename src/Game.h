@@ -10,9 +10,9 @@ class Game{
     public:
     Game(); // default constructor;
     Game(int _tickLimit, int _ticksPerSecond); // constructor for setting custom params and debugging;
-    int tick; // one tick is 1 hr in game;
-    int tickLimit; // max game length in ticks;
-    int ticksPerSecond; // ticks per second 
+    int tick = 0; // one tick is 1 hr in game;
+    int tickLimit = 2400; // max game length in ticks;
+    int ticksPerSecond = 1; // ticks per second 
     int score; // game score, cumulative gold collected from mining 
     int gold; // gold available to spend
     int currentDay;
@@ -26,4 +26,4 @@ class Game{
 
 };
 
-#endif GAME_H
+#endif //GAME_H

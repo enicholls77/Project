@@ -13,10 +13,10 @@ class Worker{
     bool isUpgraded;
     int sellPrice; // sellPrice of the worker
     Tool* equippedTool;
-    bool upgrade(); // upgrades worker 
+    void upgrade(); // upgrades worker 
     int mine(); // returns gold mined in one tick
     // void sell(); // sells worker for 'sellPrice' gold
 
 };
 
-#endif WORKER_H
+#endif //WORKER_H

@@ -1,15 +1,13 @@
-#include "../../src/Game.h";
-#include "../../src/Worker.h";
-#include "../../src/Tool.h";
+#include "../../src/Game.h"
 
 #include "gtest/gtest.h"
 
 
-// namespace {
+// tests if game default initial settings
+TEST(TestGameInstance, GameTicksPerSecond){
+    const Game game = Game();
 
-// TEST(){
-//     const Game game;
-//     EXPECT_EQ(1, game.ticksPerSecond);
-// }
-
-// }
+    EXPECT_EQ(0, game.tick) << "initial tick is 0";
+    EXPECT_EQ(1, game.ticksPerSecond) << "tps is 1";
+    EXPECT_EQ(2400, game.tickLimit) << "tick limit is 2400 ticks";
+}

@@ -15,4 +15,4 @@ class HandToolTool: public Tool{
 
 };
 
-#endif HANDTOOL_H
+#endif //HANDTOOL_H

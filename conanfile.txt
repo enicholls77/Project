@@ -1,6 +1,6 @@
 [requires]
 sfml/2.5.1
-gtest/1.12.1
+gtest/1.10.0
 
 [generators]
 cmake

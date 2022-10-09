@@ -7,12 +7,12 @@ Worker::Worker(int _sellPrice){// constructor, sets sell price of worker;
     sellPrice = _sellPrice;
 }
 
-bool Worker::upgrade(){ // upgrades worker 
+void Worker::upgrade(){ // upgrades worker 
     isUpgraded = true;
 }
 
 // TODO: is this needed?
-int activateAbility(){}
+// int Worker::activateAbility(){}
 
 int Worker::mine(){ // returns gold mined in one tick
     return miningRate;
@@ -23,6 +23,6 @@ int Worker::mine(){ // returns gold mined in one tick
 //     return miningRate;
 // }
 
-Worker::~Worker(){
-    delete this; // TODO: is this dangerous ?
-}
+// Worker::~Worker(){
+//     delete this; // TODO: is this dangerous ?
+// }

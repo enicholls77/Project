@@ -24,4 +24,4 @@ class PowerTool: public Tool{
 
 };
 
-#endif POWERTOOL_H
+#endif //POWERTOOL_H
