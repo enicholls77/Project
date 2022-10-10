@@ -2,7 +2,7 @@
 #define POWERTOOL_H
 
 #include "Tool.h"
-#include <string.h>
+#include <string>
 using namespace std;
 
 class PowerTool: public Tool{
@@ -19,7 +19,16 @@ class PowerTool: public Tool{
 
     //returns multiplier for tool, which is base rate + bonus rate from if tool is powered
     double getMiningMultiplier() {
-        return (getBaseRate() + powered*poweredMultiplier);
+        return (getBaseRate() + powered * poweredMultiplier);
+    }
+    //returns power needed per tick
+    int getPowerNeeded() {
+        return powerNeeded;
+    }
+    //changes status of powered based upon if the tool will be able to be powered or not
+    //to be used by TheGame class
+    void setpowered(bool ifPowered) {
+        powered = ifPowered;
     }
 
 };

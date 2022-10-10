@@ -2,11 +2,11 @@
 #define HANDTOOL_H
 
 #include "Tool.h"
-#include <string.h>
+#include <string>
 using namespace std;
 
-class HandToolTool: public Tool{
-   
+class HandTool: public Tool{
+    
     public:
     //returns multiplier for tool, which is base rate of the tool
     double getMiningMultiplier() {
@@ -15,4 +15,4 @@ class HandToolTool: public Tool{
 
 };
 
-#endif HANDTOOL_H
+#endif
