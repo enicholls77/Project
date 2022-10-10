@@ -52,3 +52,9 @@ This will allow conan to install system dependencies automatically
 `./build.sh`
 
 ### MacOS (M1 - ARM) (WIP):
+
+
+## Testing
+After following build instructions, go into the `build/` directory and run `ctest`:\
+`cd build`\
+`ctest`
