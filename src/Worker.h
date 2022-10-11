@@ -10,11 +10,11 @@ class Worker{
     public:
     Worker(int _sellPrice); // constructor, sets sell price of worker;
     int miningRate; // gold mining rate per tick
-    bool isUpgraded;
     int sellPrice; // sellPrice of the worker
+    bool isToolEquipped; //tells if a tool is equipped
     Tool* equippedTool;
     void upgrade(); // upgrades worker 
-    int mine(); // returns gold mined in one tick
+    double mine(); // returns gold mined in one tick
     // void sell(); // sells worker for 'sellPrice' gold
 
 };

@@ -7,15 +7,14 @@ Worker::Worker(int _sellPrice){// constructor, sets sell price of worker;
     sellPrice = _sellPrice;
 }
 
-void Worker::upgrade(){ // upgrades worker 
-    isUpgraded = true;
-}
-
-// TODO: is this needed?
-// int Worker::activateAbility(){}
-
-int Worker::mine(){ // returns gold mined in one tick
-    return miningRate;
+double Worker::mine(){  // returns gold mined in one tick, if no tool, just mining rate of miner is returned, otherwise the 
+                        // mining rate is multiplied by the multiplier of the tool
+    if (isToolEquipped == 1){
+        return (miningRate * equippedTool->getMiningMultiplier());
+    }
+    else {
+        return miningRate;
+    }
 }
 
 // TODO: sell function ???
