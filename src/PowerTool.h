@@ -27,9 +27,10 @@ class PowerTool: public Tool{
     }
     //changes status of powered based upon if the tool will be able to be powered or not
     //to be used by TheGame class
-    void setpowered(bool ifPowered) {
-        powered = ifPowered;
-    }
+    void setpowered(bool ifPowered);
+
+    //initialiser with all variables
+    PowerTool(double baseRate_, string toolName_, int powerNeeded_, double poweredMultiplier_);
 
 };
 

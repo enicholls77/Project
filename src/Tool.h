@@ -14,15 +14,11 @@ class Tool {
 
     public:
     //returns mining multiplier
-    double getBaseRate(){
-        return baseRate;
-    }
+    double getBaseRate();
     //getMiningMultipler will give miing multiplier of the tool, will be different for hand and power tools
     virtual double getMiningMultiplier() = 0;
     //retrieves tool name for display purposes
-    string returnToolName(){
-        return toolName;
-    }
+    string returnToolName();
 
 };
 
