@@ -22,6 +22,6 @@ class PowerTool: public Tool{
     PowerTool(double baseRate_, string toolName_, double poweredMultiplier_);
 
     //uses ability, which will be seperate from MegaDrill's upgrade
-    void upgrade();
+    virtual void upgrade();
 };
 #endif //POWERTOOL_H

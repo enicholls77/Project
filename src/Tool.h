@@ -25,7 +25,7 @@ class Tool {
     //retrieves tool name for display purposes
     string returnToolName();
     //upgrades the tool, will be different for PowerTools
-    void upgrade();
+    virtual void upgrade() = 0;
     //virtual powering for power tools once powered
     void setPowered();
     
