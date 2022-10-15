@@ -12,9 +12,7 @@ class PowerTool: public Tool{
     
     public:
     //returns multiplier for tool, which is base rate + bonus rate from if tool is powered
-    double getMiningMultiplier() {
-        return (getBaseRate() + powered * poweredMultiplier);
-    }
+    double getMiningMultiplier();
     //basic constructor
     PowerTool();
 

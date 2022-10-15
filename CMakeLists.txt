@@ -19,7 +19,7 @@
  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 #  add_definitions("-std=c++11")
-set(CMAKE_CXX_STANDARD 14)
+ set(CMAKE_CXX_STANDARD 14)
 
  include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
  conan_basic_setup()
@@ -33,14 +33,14 @@ set(CMAKE_CXX_STANDARD 14)
 
  aux_source_directory(test/integration inttests)
 
-
  add_executable(
   integration_tests
-  src/Tool.h
+  src/Tool.cpp
+  src/HandTool.cpp
   src/Worker.cpp
   src/Game.cpp
   ${inttests}
-)
+ )
 
 target_link_libraries(
   integration_tests
