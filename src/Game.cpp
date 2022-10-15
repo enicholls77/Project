@@ -42,8 +42,11 @@ int Game::day(){ // returns day passed (24 ticks is one day)
 }
 
 void Game::powerCurrentTools(){
-    for (int i = 0;i < workers.size();i++) {
-        workers[i]->equippedTool->setPowered();
+    if (gold >= 100) {
+        gold = gold - 100;
+        for (int i = 0;i < workers.size();i++) {
+            workers[i]->equippedTool->setPowered();
+        }
     }
 }
 
