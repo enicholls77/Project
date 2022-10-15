@@ -11,5 +11,5 @@ if "%CMAKE_GENERATOR%"=="" (
     cmake .. -G "%CMAKE_GENERATOR%" 
     cmake --build . --config Release
 
-    bin\run.exe
+    bin\idleminer.exe
 )
