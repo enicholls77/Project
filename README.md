@@ -52,7 +52,6 @@ This will allow conan to install system dependencies automatically
 `./build.sh`
 
 ### MacOS (M1 - ARM) (WIP):
-<<<<<<< HEAD
 - Install [Homebrew](https://brew.sh/)
 
 ```
@@ -77,4 +76,3 @@ sudo cp build/bin/*.dylib /usr/local/lib/
 After following build instructions, go into the `build/` directory and run `ctest`:\
 `cd build`\
 `ctest`
->>>>>>> 847339e1a916fb192d782c33e6185dc59bf6b95b
