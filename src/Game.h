@@ -23,6 +23,7 @@ class Game{
     // bool isPaused; game pause?
     int day(); // returns days passed since game started (24 ticks is one day)
     ~Game(); // destructor
+    void powerCurrentTools(); //gives power to all tools currently equipped. Must be rebought if new tools are bought.
 
 };
 
