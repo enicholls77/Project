@@ -24,9 +24,9 @@
  include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
  conan_basic_setup()
 
-
  aux_source_directory(src/ sources)
- add_executable(idleminer ${sources})
+ aux_source_directory(bindings/ bindings)
+ add_executable(idleminer ${sources} ${bindings})
  target_link_libraries(idleminer ${CONAN_LIBS})
 
  enable_testing()
