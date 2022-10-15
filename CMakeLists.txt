@@ -20,7 +20,8 @@ set(CMAKE_CXX_STANDARD 14)
 
  add_executable(
   integration_tests
-  src/Tool.h
+  src/Tool.cpp
+  src/HandTool.cpp
   src/Worker.cpp
   src/Game.cpp
   ${inttests}

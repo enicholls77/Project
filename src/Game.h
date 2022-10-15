@@ -13,12 +13,12 @@ class Game{
     int tick = 0; // one tick is 1 hr in game;
     int tickLimit = 2400; // max game length in ticks;
     int ticksPerSecond = 1; // ticks per second 
-    int score; // game score, cumulative gold collected from mining 
-    int gold; // gold available to spend
-    int currentDay;
+    double score; // game score, cumulative gold collected from mining 
+    double gold; // gold available to spend
     vector<Worker*> workers;
-    vector<int> scores; // score per tick
-    vector<int> goldMined; // gold mined per tick
+    vector<double> goldMined; // gold mined per tick
+    vector<double> goldHistory; // gold balance history 
+    vector<double> scores; // score history
     void nextTick(); // moves the game forward in time, and calls mine() on all miners. Is called in main() loop;
     // bool isPaused; game pause?
     int day(); // returns days passed since game started (24 ticks is one day)
