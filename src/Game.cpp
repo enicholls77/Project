@@ -41,6 +41,14 @@ int Game::day(){ // returns day passed (24 ticks is one day)
     return floor(tick / 24);
 }
 
+void Game::powerCurrentTools(){
+    for (int i = 0;i < workers.size();i++) {
+        workers[i]->equippedTool->setPowered();
+    }
+}
+
+
 Game::~Game(){
     workers.clear();
 }
+

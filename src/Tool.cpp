@@ -11,3 +11,13 @@ double Tool::getBaseRate(){
 string Tool::returnToolName(){
     return toolName;
 }
+//if not already upgraded, doubles base rate of tool
+void Tool::upgrade(){
+    if (upgraded == 0){
+        upgraded = 1;
+        baseRate = baseRate * 2;
+    }
+}
+void Tool::setPowered(){
+    powered = 1;
+}

@@ -13,6 +13,6 @@ class HandTool: public Tool{
 
     //initialiser with all required variables for the class
     HandTool(double baseRate_, string toolName_);
-};
 
+};
 #endif

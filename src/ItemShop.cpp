@@ -17,5 +17,5 @@ void ItemShop::buyItem(int positionInShop, Worker *workerEquipping){
     numberOfTools--;
 }
 void ItemShop::printShop(){
-    //will print name, price, power required, and mining rate of each tool, and position in shop. Depends on UI implementation.
+    
 }
