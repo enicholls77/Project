@@ -14,6 +14,7 @@ PowerTool::PowerTool(double baseRate_, string toolName_, double poweredMultiplie
     baseRate = baseRate_;
     toolName = toolName_;
     poweredMultiplier = poweredMultiplier_;
+    price = 20;
 }
 PowerTool::PowerTool(){
     baseRate = 0;

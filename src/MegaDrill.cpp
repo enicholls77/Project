@@ -9,6 +9,7 @@ MegaDrill::MegaDrill(double baseRate_, string toolName_, double poweredMultiplie
     baseRate = baseRate_;
     toolName = toolName_;
     poweredMultiplier = poweredMultiplier_;
+    price = 100;
 }
 
 void MegaDrill::upgrade(){

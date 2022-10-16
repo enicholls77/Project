@@ -4,10 +4,10 @@
 #include <cmath>
 
 // #include <glad/glad.h>
-#include "imgui.h"
 #include "../bindings/imgui_impl_opengl3.h"
 #include "../bindings/imgui_impl_glfw.h"
 #include "Game.h"
+#include "GuiLogger.h"
 
 #include<iostream>
 #include<glad/glad.h>
@@ -59,7 +59,7 @@ int main()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	ImGui::StyleColorsDark();
+	// ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 410");
 
@@ -73,7 +73,11 @@ int main()
 	// glUniform1f(glGetUniformLocation(shaderProgram, "size"), size);
 	// glUniform4f(glGetUniformLocation(shaderProgram, "color"), color[0], color[1], color[2], color[3]);
 
-	Game g = Game();
+	Game g = Game(2400, 20);
+	// historical data
+	vector<int> tickHistory;
+	vector<double> miningRateHistory;
+	static GuiLogger logger;
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -92,26 +96,90 @@ int main()
 		g.update();
 		int day = g.day();
 		int numWorkers = g.workers.size();
+		double miningRate = g.getTotalMiningRate();
+
+		tickHistory.push_back(g.tick);
+		miningRateHistory.push_back(miningRate);
 
 		ImGui::Begin("Stats");
 		// Text that appears in the window
 		ImGui::Text("Hello there adventurer!");
 		ImGui::Text("Gold: %f G", g.gold);
+		ImGui::Text("Score: %f", g.score);
 		ImGui::Text("Workers: %i", numWorkers);
 		ImGui::Text("Day: %i", day);
-		ImGui::Text("Seconds elapsed: %i", g.timeElapsed);
-		double miningRate = g.getTotalMiningRate();
+		ImGui::Text("Seconds elapsed: %f", g.timeElapsed);
 		ImGui::Text("g/tick: %f", miningRate);
 		ImGui::Text("g/day: %f", miningRate * 24);
-		ImGui::Text("s/day: %f", 24 / g.ticksPerSecond);
+		ImGui::Text("s/day: %d", 24 / g.ticksPerSecond);
 		// Checkbox that appears in the window
 		// ImGui::Checkbox("Draw Triangle", &drawTriangle);
 		// Slider that appears in the window
-		ImGui::SliderFloat("Size", &size, 0.5f, 2.0f);
-		// Fancy color editor that appears in the window
-		ImGui::ColorEdit4("Color", color);
 		// Ends the window
 		ImGui::End();
+
+
+		// Buffer size for all historical data is a maximum of 240 ticks 
+		// (240 seconds, 10 in-game days)
+		int start = g.goldHistory.size() <= 240 ? 0 : g.goldHistory.size() - 240;
+		int end = g.goldHistory.size();
+
+		float goldHistoryBuffer[240];
+		int j = 0;
+		for(int i=start; i<end; i++){
+			goldHistoryBuffer[j] = (float) g.goldHistory[i];
+			j++;
+		}
+
+
+		// cout << g.scores[g.tick] << endl;
+		float scoresBuffer[240];
+		j = 0;
+		for(int i=start; i<end; i++){
+			scoresBuffer[j] = (float) g.scores[i];
+			j++;
+		}
+
+		float miningRateHistoryBuffer[240];
+		j = 0;
+		for(int i=start; i<end; i++){
+			miningRateHistoryBuffer[j] = (float) miningRateHistory[i];
+			j++;
+		}
+
+		ImGui::SetNextWindowSize(ImVec2(315, 200), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(400,60), ImGuiCond_FirstUseEver);
+		
+		ImGui::Begin("Statistics - Graphs");
+		ImGui::PlotLines("Gold Balance", goldHistoryBuffer, end - start);
+		ImGui::PlotLines("Score", scoresBuffer, end - start);
+		ImGui::PlotLines("Mining Rate", miningRateHistoryBuffer, end - start);
+		ImGui::End();
+
+		ImGui::SetNextWindowSize(ImVec2(315, 200), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(60,300), ImGuiCond_FirstUseEver);
+		
+		ImGui::Begin("Shop");
+		if(ImGui::Button("Buy Worker: 5 G")){
+			bool bought = g.buyWorker();
+			if(bought){
+				logger.AddLog("Bought Worker\n");
+			} else{
+				char msg[] = "Cannot buy Worker!!! (don't be poor lol)\n";
+				ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255,0,0,255));
+				// ImGui::InputText("##text1", msg, sizeof(msg));
+				logger.AddLog("%s", msg);
+				ImGui::PopStyleColor();
+			}
+		}
+		ImGui::End();
+
+		ImGui::SetNextWindowSize(ImVec2(325, 200), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(400,300), ImGuiCond_FirstUseEver);
+		logger.Draw("Logs");
+
+
+		// ImGui::End();
 
 		// Renders the ImGUI elements
 		ImGui::Render();
