@@ -15,6 +15,7 @@ Game::Game(){
     ticksPerSecond = 1; 
     gold = 0;
     score = 0;
+    int *scores = new int[tickLimit]{0};
 
     Worker* worker;
     worker = new Worker(5);
@@ -33,6 +34,7 @@ Game::Game(int _tickLimit, int _ticksPerSecond){ // constructor for setting cust
     ticksPerSecond = _ticksPerSecond; 
     gold = 0;
     score = 0;
+    int *scores = new int[_tickLimit]{0};   //need to make sure ticklimit isn't set too large
 
     Worker* worker;
     worker = new Worker(5);
@@ -63,7 +65,8 @@ void Game::nextTick(bool _manual){
     score += mined;
     gold += mined;
     goldMined.push_back(mined);
-    scores.push_back(score);
+    //scores.push_back(score);      //commenting out to use dynamically allocated array instead of vector
+    scores[tick] = score;           //allocated score value as 
     goldHistory.push_back(gold);
     // TODO: Yuck
     if(!_manual){
@@ -98,8 +101,10 @@ void Game::powerCurrentTools(){
     }
 }
 
+void Game::clearScores(){
+    delete[] scores;
+}
 
 Game::~Game(){
     workers.clear();
 }
-
