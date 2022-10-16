@@ -22,6 +22,9 @@ Game::Game(){
     ticksPerSecond = 1; 
     gold = 0;
     score = 0;
+    workersToUpgrade = 1;
+    upgradeAllBasePrice = 100;
+    workerPrice = 10;
     scores = new double[2400]{0};   //need to make sure ticklimit isn't set too large
 
         // item shop
@@ -43,6 +46,8 @@ Game::Game(){
     worker->equippedTool = pick;
     worker->isToolEquipped = true;
     workers.push_back(worker);
+    checkWorkersToUpgrade();
+    
 
     // startingTime = std::clock();
     startingTime = std::chrono::steady_clock::now();
@@ -55,6 +60,9 @@ Game::Game(int _tickLimit, int _ticksPerSecond){ // constructor for setting cust
     ticksPerSecond = _ticksPerSecond; 
     gold = 0;
     score = 0;
+    workersToUpgrade = 1;
+    upgradeAllBasePrice = 100;
+    workerPrice = 10;
     scores = new double[_tickLimit]{0};   //need to make sure ticklimit isn't set too large
 
     // item shop
@@ -76,6 +84,7 @@ Game::Game(int _tickLimit, int _ticksPerSecond){ // constructor for setting cust
     worker->equippedTool = pick;
     worker->isToolEquipped = true;
     workers.push_back(worker);
+    checkWorkersToUpgrade();
 
     startingTime = std::chrono::steady_clock::now();
     timeElapsed = 0;
@@ -106,6 +115,7 @@ void Game::nextTick(bool _manual){
     //scores.push_back(score);      //commenting out to use dynamically allocated array instead of vector
     scores[tick] = score;           //allocated score value as 
     goldHistory.push_back(gold);
+    checkWorkersToUpgrade();
     // TODO: Yuck
     if(!_manual){
         int tickDelta = floor(timeElapsed * ticksPerSecond) - tick;
@@ -154,12 +164,14 @@ bool Game::buyWorker(){
     newWorker->isToolEquipped = true;
     gold -= workerPrice;
     workers.push_back(newWorker);
+    workerPrice = workerPrice * 2;
     return true;
 }
 
 Game::~Game(){
     workers.clear();
     workerShop.clear();
+    delete[] scores;
 }
 
 bool Game::buyTool(int positionInShop){
@@ -181,4 +193,26 @@ bool Game::buyTool(int positionInShop){
 
 void Game::addTool(Tool *toolAdded){
     toolShop->addToItemShop(toolAdded);
+}
+
+bool Game::upgradeAll(){
+    if (upgradeAllBasePrice*workersToUpgrade > gold) {
+        return false;
+    }
+    else {
+        gold -= upgradeAllBasePrice*workersToUpgrade;
+        for (int j = 0; j < workers.size(); j++){
+            workers[j]->equippedTool->upgrade();
+        }
+        return true;
+    }
+}
+
+void Game::checkWorkersToUpgrade(){
+    workersToUpgrade = 0;
+    for (int i = 0; i < workers.size(); i++){
+        if (workers[i]->equippedTool->upgraded == false){
+            workersToUpgrade++;
+        }
+    }
 }

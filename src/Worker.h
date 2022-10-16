@@ -12,8 +12,7 @@ class Worker{
     int miningRate; // gold mining rate per tick
     int price; // sellPrice of the worker
     bool isToolEquipped; //tells if a tool is equipped
-    Tool* equippedTool;
-    void upgrade(); // upgrades worker 
+    Tool* equippedTool; //equipped tool
     double mine(); // returns gold mined in one tick
 
 };

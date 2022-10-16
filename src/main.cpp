@@ -184,6 +184,18 @@ int main()
 			}
 		}
 
+		char buyUpgradeAllText[30];
+		std::sprintf(buyUpgradeAllText, "Upgrade All Tools %.1f G", (g.upgradeAllBasePrice*g.workersToUpgrade));
+		if(ImGui::Button(buyUpgradeAllText)){
+			bool bought = g.upgradeAll();
+			if(bought){
+				logger.AddLog("Upgrade All Tools!\n");
+			} else{
+				char msg[] = "Could not upgrade tools, back to mining!\n";
+				logger.AddLog("%s", msg);
+			}
+		}
+
 
 
 		// for(int i=0; i<=g.toolShop->numberOfTools; i++){

@@ -13,8 +13,6 @@ class Tool {
     string toolName;
     //will only have an impact on PowerTool and MegaDrill classes
     bool powered;
-    //shows if tool is upgraded or not
-    bool upgraded;
     
 
     public:
@@ -28,7 +26,10 @@ class Tool {
     virtual void upgrade() = 0;
     //virtual powering for power tools once powered
     void setPowered();
-    double price; // price of tool
+    // price of tool
+    double price;
+    //shows if tool is upgraded or not
+    bool upgraded;
     
 
 };

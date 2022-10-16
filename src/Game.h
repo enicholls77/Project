@@ -26,6 +26,9 @@ class Game{
     double timeElapsed;
     double score; // game score, cumulative gold collected from mining 
     double gold; // gold available to spend
+    double upgradeAllBasePrice = 100; //price to upgrade all tools
+    int workersToUpgrade; //number of unupgraded workers
+    double workerPrice; //price of new worker, doubles for every worker bought
     vector<Worker*> workers;
     vector<Worker*> workerShop;
     ItemShop *toolShop;
@@ -44,8 +47,8 @@ class Game{
     bool buyWorker(); //buys a new worker
     bool buyTool(int positionInShop); //buying an tool from the tool shop
     void addTool(Tool *toolAdded); //adding a tool to the tool shop
-    double workerPrice = 10; // price of worker
-
+    bool upgradeAll(); //upgrades tools of all workers
+    void checkWorkersToUpgrade(); //checks number of workers to upgrade
 };
 
 #endif //GAME_H
