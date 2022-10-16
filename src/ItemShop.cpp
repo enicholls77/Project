@@ -16,6 +16,11 @@ void ItemShop::buyItem(int positionInShop, Worker *workerEquipping){
     toolList.erase (toolList.begin() + positionInShop -1);      //removes tool from this position in the shop
     numberOfTools--;
 }
-void ItemShop::printShop(){
-    
+void ItemShop::addToItemShop(Tool * addedTool){
+    toolList.push_back(addedTool);                              //adds tool to the item shop
+    numberOfTools++;                                            //increments number of tools in shop by 1 for tracking size of shop
+}
+ItemShop::ItemShop(){
+    vector<Tool *> toolList;
+    numberOfTools = 0;
 }

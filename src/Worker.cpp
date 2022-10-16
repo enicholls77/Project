@@ -3,8 +3,8 @@
 #include <string.h>
 using namespace std;
 
-Worker::Worker(int _sellPrice){// constructor, sets sell price of worker;
-    sellPrice = _sellPrice;
+Worker::Worker(int _price){// constructor, sets sell price of worker;
+    price = _price;
     miningRate = 1;
 }
 
@@ -17,11 +17,6 @@ double Worker::mine(){  // returns gold mined in one tick, if no tool, just mini
         return miningRate;
     }
 }
-
-// TODO: sell function ???
-// int Worker::sell(){ // returns gold mined in one tick
-//     return miningRate;
-// }
 
 // Worker::~Worker(){
 //     delete this; // TODO: is this dangerous ?
