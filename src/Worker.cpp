@@ -5,6 +5,7 @@ using namespace std;
 
 Worker::Worker(int _sellPrice){// constructor, sets sell price of worker;
     sellPrice = _sellPrice;
+    miningRate = 1;
 }
 
 double Worker::mine(){  // returns gold mined in one tick, if no tool, just mining rate of miner is returned, otherwise the 

@@ -1,6 +1,20 @@
 [requires]
 sfml/2.5.1
 gtest/1.10.0
+glad/0.1.36
+imgui/cci.20220621+1.88.docking
+glfw/3.3.8
+
+[options]
+sfml:shared=True
 
 [generators]
 cmake
+
+[imports]
+lib, *.dylib* -> ./bin
+./res/bindings, imgui_impl_glfw.cpp -> ../bindings
+./res/bindings, imgui_impl_opengl3.cpp -> ../bindings
+./res/bindings, imgui_impl_opengl3_loader.h -> ../bindings
+./res/bindings, imgui_impl_glfw.h -> ../bindings
+./res/bindings, imgui_impl_opengl3.h -> ../bindings
