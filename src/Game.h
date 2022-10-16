@@ -10,6 +10,8 @@
 #include <vector>
 #include <ctime>
 #include <string>
+#include <cmath>
+#include <iostream>
 using namespace std;
 
 class Game{
@@ -39,8 +41,7 @@ class Game{
     ~Game(); // destructor
     void powerCurrentTools(); //gives power to all tools currently equipped. Must be rebought if new tools are bought.
     void clearScores(); //deletes array of scores
-    void buyWorker(int positionInShop); //buying a worker from the shop
-    void addToWorkerShop(Worker *workerAdding); //adding a worker to the worker shop
+    void buyWorker(); //buys a new worker
     void buyTool(int positionInShop, Worker *workerEquipping); //buying an tool from the tool shop
     void addTool(Tool *toolAdded); //adding a tool to the tool shop
 
