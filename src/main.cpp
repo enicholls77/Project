@@ -74,7 +74,7 @@ int main()
 	// glUniform1f(glGetUniformLocation(shaderProgram, "size"), size);
 	// glUniform4f(glGetUniformLocation(shaderProgram, "color"), color[0], color[1], color[2], color[3]);
 
-	Game g = Game(2400, 10);
+	Game g = Game(2400, 1);
 	// historical data
 	vector<int> tickHistory;
 	vector<int> miningRateHistory;

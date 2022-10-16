@@ -37,6 +37,7 @@
   integration_tests
   src/Tool.cpp
   src/HandTool.cpp
+  src/ItemShop.cpp
   src/Worker.cpp
   src/Game.cpp
   ${inttests}

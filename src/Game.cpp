@@ -21,7 +21,7 @@ Game::Game(){
     ticksPerSecond = 1; 
     gold = 0;
     score = 0;
-    int *scores = new int[tickLimit]{0};
+    scores = new double[2400]{0};   //need to make sure ticklimit isn't set too large
 
     toolShop = new ItemShop();
     Worker* worker;
@@ -41,7 +41,7 @@ Game::Game(int _tickLimit, int _ticksPerSecond){ // constructor for setting cust
     ticksPerSecond = _ticksPerSecond; 
     gold = 0;
     score = 0;
-    int *scores = new int[_tickLimit]{0};   //need to make sure ticklimit isn't set too large
+    scores = new double[_tickLimit]{0};   //need to make sure ticklimit isn't set too large
 
     ItemShop *toolShop = new ItemShop();
     Worker* worker;
