@@ -7,6 +7,7 @@
 #include "imgui.h"
 #include "../bindings/imgui_impl_opengl3.h"
 #include "../bindings/imgui_impl_glfw.h"
+#include "Game.h"
 
 #include<iostream>
 #include<glad/glad.h>
@@ -63,7 +64,7 @@ int main()
 	ImGui_ImplOpenGL3_Init("#version 410");
 
 	// Variables to be changed in the ImGUI window
-	bool drawTriangle = true;
+	// bool drawTriangle = true;
 	float size = 1.0f;
 	float color[4] = { 0.8f, 0.3f, 0.02f, 1.0f };
 
@@ -71,6 +72,8 @@ int main()
 	// glUseProgram(shaderProgram);
 	// glUniform1f(glGetUniformLocation(shaderProgram, "size"), size);
 	// glUniform4f(glGetUniformLocation(shaderProgram, "color"), color[0], color[1], color[2], color[3]);
+
+	Game g = Game();
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -85,21 +88,22 @@ int main()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		
+		// game updates
+		g.update();
+		int day = g.day();
+		int numWorkers = g.workers.size();
 
-		// // Tell OpenGL which Shader Program we want to use
-		// glUseProgram(shaderProgram);
-		// // Bind the VAO so OpenGL knows to use it
-		// glBindVertexArray(VAO);
-		// // Only draw the triangle if the ImGUI checkbox is ticked
-		// if (drawTriangle)
-		// 	// Draw the triangle using the GL_TRIANGLES primitive
-		// 	glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		// ImGUI window creation
-		ImGui::Begin("My name is window, ImGUI window");
+		ImGui::Begin("Stats");
 		// Text that appears in the window
 		ImGui::Text("Hello there adventurer!");
+		ImGui::Text("Gold: %f G", g.gold);
+		ImGui::Text("Workers: %i", numWorkers);
+		ImGui::Text("Day: %i", day);
+		ImGui::Text("Seconds elapsed: %i", g.timeElapsed);
+		double miningRate = g.getTotalMiningRate();
+		ImGui::Text("g/tick: %f", miningRate);
+		ImGui::Text("g/day: %f", miningRate * 24);
+		ImGui::Text("s/day: %f", 24 / g.ticksPerSecond);
 		// Checkbox that appears in the window
 		// ImGui::Checkbox("Draw Triangle", &drawTriangle);
 		// Slider that appears in the window
@@ -108,11 +112,6 @@ int main()
 		ImGui::ColorEdit4("Color", color);
 		// Ends the window
 		ImGui::End();
-
-		// Export variables to shader
-		// glUseProgram(shaderProgram);
-		// glUniform1f(glGetUniformLocation(shaderProgram, "size"), size);
-		// glUniform4f(glGetUniformLocation(shaderProgram, "color"), color[0], color[1], color[2], color[3]);
 
 		// Renders the ImGUI elements
 		ImGui::Render();

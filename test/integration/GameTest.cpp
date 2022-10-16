@@ -32,9 +32,9 @@ TEST(TestGameInstance, nextTick){
     int len = game.workers.size();
 
     // run game for 50 ticks -> ~2 days
-    double ticks = 50;
+    int ticks = 50;
     for(int i=0; i<ticks; i++){
-        game.nextTick();
+        game.nextTick(true);
         EXPECT_EQ(game.goldMined[i], 1) << "Incorrect amount gold mined per tick" << std::endl;
         EXPECT_EQ(game.scores[i], i + 1) << "Incorrect score history" << std::endl;
         EXPECT_EQ(game.goldHistory[i], i + 1) << "Incorrect gold balance history" << std::endl;
