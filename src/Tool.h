@@ -28,6 +28,7 @@ class Tool {
     virtual void upgrade() = 0;
     //virtual powering for power tools once powered
     void setPowered();
+    double price; // price of tool
     
 
 };

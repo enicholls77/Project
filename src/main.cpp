@@ -4,11 +4,10 @@
 #include <cmath>
 
 // #include <glad/glad.h>
-#include "imgui.h"
 #include "../bindings/imgui_impl_opengl3.h"
 #include "../bindings/imgui_impl_glfw.h"
-#include <implot.h>
 #include "Game.h"
+#include "GuiLogger.h"
 
 #include<iostream>
 #include<glad/glad.h>
@@ -74,10 +73,11 @@ int main()
 	// glUniform1f(glGetUniformLocation(shaderProgram, "size"), size);
 	// glUniform4f(glGetUniformLocation(shaderProgram, "color"), color[0], color[1], color[2], color[3]);
 
-	Game g = Game(2400, 1);
+	Game g = Game(2400, 20);
 	// historical data
 	vector<int> tickHistory;
-	vector<int> miningRateHistory;
+	vector<double> miningRateHistory;
+	static GuiLogger logger;
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -105,18 +105,16 @@ int main()
 		// Text that appears in the window
 		ImGui::Text("Hello there adventurer!");
 		ImGui::Text("Gold: %f G", g.gold);
+		ImGui::Text("Score: %f", g.score);
 		ImGui::Text("Workers: %i", numWorkers);
 		ImGui::Text("Day: %i", day);
 		ImGui::Text("Seconds elapsed: %f", g.timeElapsed);
 		ImGui::Text("g/tick: %f", miningRate);
 		ImGui::Text("g/day: %f", miningRate * 24);
-		ImGui::Text("s/day: %f", 24 / g.ticksPerSecond);
+		ImGui::Text("s/day: %d", 24 / g.ticksPerSecond);
 		// Checkbox that appears in the window
 		// ImGui::Checkbox("Draw Triangle", &drawTriangle);
 		// Slider that appears in the window
-		ImGui::SliderFloat("Size", &size, 0.5f, 2.0f);
-		// Fancy color editor that appears in the window
-		ImGui::ColorEdit4("Color", color);
 		// Ends the window
 		ImGui::End();
 
@@ -133,6 +131,8 @@ int main()
 			j++;
 		}
 
+
+		// cout << g.scores[g.tick] << endl;
 		float scoresBuffer[240];
 		j = 0;
 		for(int i=start; i<end; i++){
@@ -154,10 +154,6 @@ int main()
 		ImGui::PlotLines("Gold Balance", goldHistoryBuffer, end - start);
 		ImGui::PlotLines("Score", scoresBuffer, end - start);
 		ImGui::PlotLines("Mining Rate", miningRateHistoryBuffer, end - start);
-		// if (ImPlot::BeginPlot("Gold Balance")) {
-			// ImPlot::PlotLine("Gold Balance", goldHistoryBuffer, end - start);
-			// ImPlot::EndPlot();
-		// }
 		ImGui::End();
 
 		ImGui::SetNextWindowSize(ImVec2(315, 200), ImGuiCond_FirstUseEver);
@@ -165,9 +161,22 @@ int main()
 		
 		ImGui::Begin("Shop");
 		if(ImGui::Button("Buy Worker: 5 G")){
-			g.buyWorker();
+			bool bought = g.buyWorker();
+			if(bought){
+				logger.AddLog("Bought Worker\n");
+			} else{
+				char msg[] = "Cannot buy Worker!!! (don't be poor lol)\n";
+				ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255,0,0,255));
+				// ImGui::InputText("##text1", msg, sizeof(msg));
+				logger.AddLog("%s", msg);
+				ImGui::PopStyleColor();
+			}
 		}
 		ImGui::End();
+
+		ImGui::SetNextWindowSize(ImVec2(325, 200), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(400,300), ImGuiCond_FirstUseEver);
+		logger.Draw("Logs");
 
 
 		// ImGui::End();

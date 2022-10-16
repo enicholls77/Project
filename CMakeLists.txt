@@ -37,6 +37,8 @@
   integration_tests
   src/Tool.cpp
   src/HandTool.cpp
+  src/PowerTool.cpp
+  src/MegaDrill.cpp
   src/ItemShop.cpp
   src/Worker.cpp
   src/Game.cpp

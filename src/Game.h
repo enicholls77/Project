@@ -8,7 +8,7 @@
 #include "MegaDrill.h"
 #include "ItemShop.h"
 #include <vector>
-#include <ctime>
+#include <chrono>
 #include <string>
 #include <cmath>
 #include <iostream>
@@ -22,7 +22,7 @@ class Game{
     int tick = 0; // one tick is 1 hr in game;
     int tickLimit = 2400; // max game length in ticks;
     int ticksPerSecond = 1; // ticks per second 
-    clock_t startingTime;
+    std::chrono::steady_clock::time_point startingTime;
     double timeElapsed;
     double score; // game score, cumulative gold collected from mining 
     double gold; // gold available to spend
@@ -41,9 +41,10 @@ class Game{
     ~Game(); // destructor
     void powerCurrentTools(); //gives power to all tools currently equipped. Must be rebought if new tools are bought.
     void clearScores(); //deletes array of scores
-    void buyWorker(); //buys a new worker
-    void buyTool(int positionInShop, Worker *workerEquipping); //buying an tool from the tool shop
+    bool buyWorker(); //buys a new worker
+    bool buyTool(int positionInShop, Worker *workerEquipping); //buying an tool from the tool shop
     void addTool(Tool *toolAdded); //adding a tool to the tool shop
+    double workerPrice = 5; // price of worker
 
 };
 

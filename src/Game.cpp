@@ -9,7 +9,7 @@
 #include "ItemShop.h"
 #include "Game.h"
 #include <vector>
-#include <ctime>
+#include <chrono>
 #include <string>
 
 using namespace std;
@@ -31,7 +31,8 @@ Game::Game(){
     worker->isToolEquipped = true;
     workers.push_back(worker);
 
-    startingTime = std::clock();
+    // startingTime = std::clock();
+    startingTime = std::chrono::steady_clock::now();
     timeElapsed = 0;
 }
 
@@ -51,14 +52,16 @@ Game::Game(int _tickLimit, int _ticksPerSecond){ // constructor for setting cust
     worker->isToolEquipped = true;
     workers.push_back(worker);
 
-    startingTime = std::clock();
+    startingTime = std::chrono::steady_clock::now();
     timeElapsed = 0;
 }
 
 // updates game state
 void Game::update(){ 
     clock_t currentTime = std::clock();
-    timeElapsed = double(currentTime - startingTime) / CLOCKS_PER_SEC;
+    // timeElapsed = double(currentTime - startingTime) / CLOCKS_PER_SEC;
+    std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+    timeElapsed = std::chrono::duration_cast<std::chrono::seconds>(now - startingTime).count();
     int tickDelta = floor(timeElapsed * ticksPerSecond) - tick;
     if (tickDelta >= 1){
         nextTick(false);
@@ -113,14 +116,18 @@ void Game::clearScores(){
     delete[] scores;
 }
 
-void Game::buyWorker(){
+bool Game::buyWorker(){
+    if(workerPrice > gold){
+        return false;
+    }
     Worker* newWorker;
     newWorker = new Worker(5);
     HandTool* pick = new HandTool(1, "Pickaxe");
     newWorker->equippedTool = pick;
     newWorker->isToolEquipped = true;
-    gold -= 5;
+    gold -= workerPrice;
     workers.push_back(newWorker);
+    return true;
 }
 
 Game::~Game(){
@@ -128,8 +135,13 @@ Game::~Game(){
     workerShop.clear();
 }
 
-void Game::buyTool(int positionInShop, Worker *workerEquipping){
+bool Game::buyTool(int positionInShop, Worker *workerEquipping){
+    double price = toolShop->toolList[positionInShop]->price;
+    if(price > gold){
+        return false;
+    }
     toolShop->buyItem(positionInShop, workerEquipping);
+    return true;
 }
 
 void Game::addTool(Tool *toolAdded){
