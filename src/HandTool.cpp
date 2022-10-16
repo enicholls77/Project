@@ -16,9 +16,9 @@ void HandTool::upgrade(){
     }
 }
 
-HandTool::HandTool(double baseRate_, string toolName_){
+HandTool::HandTool(double baseRate_, string toolName_, double _price){
     baseRate = baseRate_;
     toolName = toolName_;
     upgraded = 0;
-    price = 2;
+    price = _price;
 }

@@ -1,6 +1,6 @@
-#include <string>
 #include <vector>
 #include <iostream>
+#include <format>
 #include <cmath>
 
 // #include <glad/glad.h>
@@ -73,10 +73,14 @@ int main()
 	// glUniform1f(glGetUniformLocation(shaderProgram, "size"), size);
 	// glUniform4f(glGetUniformLocation(shaderProgram, "color"), color[0], color[1], color[2], color[3]);
 
-	Game g = Game(2400, 20);
+	Game g = Game(2400, 1);
 	// historical data
 	vector<int> tickHistory;
-	vector<double> miningRateHistory;
+	vector<float> miningRateHistory;
+	float miningRateBuffer[240];
+	vector<float> workerCountHistory;
+	float workerCountBuffer[240];
+	
 	static GuiLogger logger;
 
 	// Main while loop
@@ -93,25 +97,39 @@ int main()
 		ImGui::NewFrame();
 
 		// game updates
-		g.update();
+		bool updated = g.update();
 		int day = g.day();
 		int numWorkers = g.workers.size();
 		double miningRate = g.getTotalMiningRate();
 
-		tickHistory.push_back(g.tick);
-		miningRateHistory.push_back(miningRate);
+		if(updated){
+			tickHistory.push_back(g.tick);
+			if(miningRateHistory.size() >= 240){
+				miningRateHistory.erase(miningRateHistory.begin());
+			}
+			miningRateHistory.push_back((float)miningRate);
+
+			std::copy(miningRateHistory.begin(), miningRateHistory.end(), miningRateBuffer);
+
+			if(workerCountHistory.size() >= 240){
+				workerCountHistory.erase(workerCountHistory.begin());
+			}
+			workerCountHistory.push_back((float)numWorkers);
+
+			std::copy(workerCountHistory.begin(), workerCountHistory.end(), workerCountBuffer);
+		}
 
 		ImGui::Begin("Stats");
 		// Text that appears in the window
 		ImGui::Text("Hello there adventurer!");
-		ImGui::Text("Gold: %f G", g.gold);
-		ImGui::Text("Score: %f", g.score);
+		ImGui::Text("Gold: %.2f G", g.gold);
+		ImGui::Text("Score: %.2f", g.score);
 		ImGui::Text("Workers: %i", numWorkers);
 		ImGui::Text("Day: %i", day);
-		ImGui::Text("Seconds elapsed: %f", g.timeElapsed);
-		ImGui::Text("g/tick: %f", miningRate);
-		ImGui::Text("g/day: %f", miningRate * 24);
-		ImGui::Text("s/day: %d", 24 / g.ticksPerSecond);
+		ImGui::Text("Seconds elapsed: %.2f", g.timeElapsed);
+		ImGui::Text("G/tick: %.2f", miningRate);
+		ImGui::Text("G/day: %.2f", miningRate * 24);
+		ImGui::Text("s/day: %.2d", 24 / g.ticksPerSecond);
 		// Checkbox that appears in the window
 		// ImGui::Checkbox("Draw Triangle", &drawTriangle);
 		// Slider that appears in the window
@@ -131,47 +149,59 @@ int main()
 			j++;
 		}
 
-
 		// cout << g.scores[g.tick] << endl;
 		float scoresBuffer[240];
 		j = 0;
-		for(int i=start; i<end; i++){
+		for(int i=g.ticksPerSecond * start; i<g.ticksPerSecond * end; i+=g.ticksPerSecond){
 			scoresBuffer[j] = (float) g.scores[i];
-			j++;
-		}
-
-		float miningRateHistoryBuffer[240];
-		j = 0;
-		for(int i=start; i<end; i++){
-			miningRateHistoryBuffer[j] = (float) miningRateHistory[i];
 			j++;
 		}
 
 		ImGui::SetNextWindowSize(ImVec2(315, 200), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowPos(ImVec2(400,60), ImGuiCond_FirstUseEver);
 		
-		ImGui::Begin("Statistics - Graphs");
+		ImGui::Begin("Statistics - Graphs (last 240 seconds)");
 		ImGui::PlotLines("Gold Balance", goldHistoryBuffer, end - start);
 		ImGui::PlotLines("Score", scoresBuffer, end - start);
-		ImGui::PlotLines("Mining Rate", miningRateHistoryBuffer, end - start);
+		ImGui::PlotLines("Workers", workerCountBuffer, workerCountHistory.size());
+		ImGui::PlotLines("Mining Rate", miningRateBuffer, miningRateHistory.size());
 		ImGui::End();
 
 		ImGui::SetNextWindowSize(ImVec2(315, 200), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowPos(ImVec2(60,300), ImGuiCond_FirstUseEver);
 		
 		ImGui::Begin("Shop");
-		if(ImGui::Button("Buy Worker: 5 G")){
+
+		char buyWorkerText[20];
+		std::sprintf(buyWorkerText, "Buy Worker: %.1f G", g.workerPrice);
+		if(ImGui::Button(buyWorkerText)){
 			bool bought = g.buyWorker();
 			if(bought){
 				logger.AddLog("Bought Worker\n");
 			} else{
 				char msg[] = "Cannot buy Worker!!! (don't be poor lol)\n";
-				ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255,0,0,255));
-				// ImGui::InputText("##text1", msg, sizeof(msg));
 				logger.AddLog("%s", msg);
-				ImGui::PopStyleColor();
 			}
 		}
+
+
+
+		// for(int i=0; i<=g.toolShop->numberOfTools; i++){
+		// 	char buyToolText[200];
+		// 	Tool* item = g.toolShop->toolList[i];
+
+		// 	std::sprintf(buyToolText, "Buy %.1f G", , item->price);
+
+		// 	if(ImGui::Button(buyToolText)){
+		// 		bool bought = g.buyTool(i);
+		// 		if(bought){
+		// 			logger.AddLog("Bought Tool\n");
+		// 		} else{
+		// 			char msg[] = "Cannot buy tool!!! (don't be poor lol)\n";
+		// 			logger.AddLog("%s", msg);
+		// 		}
+		// 	}
+		// }
 		ImGui::End();
 
 		ImGui::SetNextWindowSize(ImVec2(325, 200), ImGuiCond_FirstUseEver);

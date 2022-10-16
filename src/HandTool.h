@@ -13,7 +13,7 @@ class HandTool: public Tool{
     void upgrade();
 
     //initialiser with all required variables for the class
-    HandTool(double baseRate_, string toolName_);
+    HandTool(double baseRate_, string toolName_, double _price);
 
 };
 #endif

@@ -33,7 +33,7 @@ class Game{
     vector<double> goldHistory; // gold balance history 
     //vector<double> scores; // score history
     double *scores; //score history
-    void update();
+    bool update();
     void nextTick(bool _manual); // moves the game forward in time, and calls mine() on all miners. Is called in main() loop;
     double getTotalMiningRate(); // gold per tick
     // bool isPaused; game pause?
@@ -42,9 +42,9 @@ class Game{
     void powerCurrentTools(); //gives power to all tools currently equipped. Must be rebought if new tools are bought.
     void clearScores(); //deletes array of scores
     bool buyWorker(); //buys a new worker
-    bool buyTool(int positionInShop, Worker *workerEquipping); //buying an tool from the tool shop
+    bool buyTool(int positionInShop); //buying an tool from the tool shop
     void addTool(Tool *toolAdded); //adding a tool to the tool shop
-    double workerPrice = 5; // price of worker
+    double workerPrice = 10; // price of worker
 
 };
 
