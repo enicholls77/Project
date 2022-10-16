@@ -25,7 +25,7 @@ PowerTool::PowerTool(){
 void PowerTool::upgrade(){
     if (upgraded == 0) {
         upgraded = 1;
-        baseRate = baseRate * 2;
-        poweredMultiplier = poweredMultiplier * 2;
+        baseRate = baseRate * 5;
+        poweredMultiplier = poweredMultiplier * 5;
     }
 }
