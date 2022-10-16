@@ -2,9 +2,16 @@
 #include <ctime>
 #include <iostream>
 
-#include "HandTool.h"
 #include "Worker.h"
+#include "Tool.h"
+#include "HandTool.h"
+#include "PowerTool.h"
+#include "MegaDrill.h"
+#include "ItemShop.h"
 #include "Game.h"
+#include <vector>
+#include <ctime>
+#include <string>
 
 using namespace std;
 
@@ -17,6 +24,7 @@ Game::Game(){
     score = 0;
     int *scores = new int[tickLimit]{0};
 
+    toolShop = new ItemShop();
     Worker* worker;
     worker = new Worker(5);
     HandTool* pick = new HandTool(1, "Pickaxe");
@@ -36,6 +44,7 @@ Game::Game(int _tickLimit, int _ticksPerSecond){ // constructor for setting cust
     score = 0;
     int *scores = new int[_tickLimit]{0};   //need to make sure ticklimit isn't set too large
 
+    ItemShop *toolShop = new ItemShop();
     Worker* worker;
     worker = new Worker(5);
     HandTool* pick = new HandTool(1, "Pickaxe");
@@ -105,6 +114,24 @@ void Game::clearScores(){
     delete[] scores;
 }
 
+void Game::buyWorker(int positionInShop){
+    workers.push_back(workerShop[positionInShop]);
+    workerShop.erase(workerShop.begin() + positionInShop -1);
+}
+
+void Game::addToWorkerShop(Worker *workerAdding){
+    workerShop.push_back(workerAdding);
+}
+
 Game::~Game(){
     workers.clear();
+    workerShop.clear();
+}
+
+void Game::buyTool(int positionInShop, Worker *workerEquipping){
+    toolShop->buyItem(positionInShop, workerEquipping);
+}
+
+void Game::addTool(Tool *toolAdded){
+    toolShop->addToItemShop(toolAdded);
 }

@@ -15,9 +15,8 @@ class ItemShop {
     vector<Tool *> toolList;    //vector of addresses to all tools in the shop
     int numberOfTools;          //number of tools in the shop total
     public:
-    //moves item from shop to worker
-    void buyItem(int positionInShop, Worker *workerEquipping);
-    //will print name, price, power required, and mining rate of each tool, and position in shop. Depends on UI implementation.
-    void printShop();
+    void buyItem(int positionInShop, Worker *workerEquipping); //moves item from shop to worker
+    void addToItemShop(Tool * addedTool); //adding tool to shop
+    ItemShop(); //basic constructor
 };
 #endif
