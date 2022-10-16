@@ -160,7 +160,7 @@ int main()
 		ImGui::SetNextWindowSize(ImVec2(315, 200), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowPos(ImVec2(400,60), ImGuiCond_FirstUseEver);
 		
-		ImGui::Begin("Statistics - Graphs (last 240 seconds)");
+		ImGui::Begin("Statistics - Graphs (last 240 ticks)");
 		ImGui::PlotLines("Gold Balance", goldHistoryBuffer, end - start);
 		ImGui::PlotLines("Score", scoresBuffer, end - start);
 		ImGui::PlotLines("Workers", workerCountBuffer, workerCountHistory.size());

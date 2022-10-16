@@ -1,5 +1,6 @@
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 
 #include "Worker.h"
 #include "Tool.h"
