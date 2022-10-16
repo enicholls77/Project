@@ -1,5 +1,4 @@
 #include <cmath>
-#include <ctime>
 #include <iostream>
 
 #include "Worker.h"
@@ -114,13 +113,13 @@ void Game::clearScores(){
     delete[] scores;
 }
 
-void Game::buyWorker(int positionInShop){
-    workers.push_back(workerShop[positionInShop]);
-    workerShop.erase(workerShop.begin() + positionInShop -1);
-}
-
-void Game::addToWorkerShop(Worker *workerAdding){
-    workerShop.push_back(workerAdding);
+void Game::buyWorker(){
+    Worker* newWorker;
+    newWorker = new Worker(5);
+    HandTool* pick = new HandTool(1, "Pickaxe");
+    newWorker->equippedTool = pick;
+    newWorker->isToolEquipped = true;
+    workers.push_back(newWorker);
 }
 
 Game::~Game(){
