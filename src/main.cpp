@@ -147,7 +147,9 @@ int main()
 			j++;
 		}
 
-
+		ImGui::SetNextWindowSize(ImVec2(315, 200), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(400,60), ImGuiCond_FirstUseEver);
+		
 		ImGui::Begin("Statistics - Graphs");
 		ImGui::PlotLines("Gold Balance", goldHistoryBuffer, end - start);
 		ImGui::PlotLines("Score", scoresBuffer, end - start);
@@ -156,6 +158,15 @@ int main()
 			// ImPlot::PlotLine("Gold Balance", goldHistoryBuffer, end - start);
 			// ImPlot::EndPlot();
 		// }
+		ImGui::End();
+
+		ImGui::SetNextWindowSize(ImVec2(315, 200), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(60,300), ImGuiCond_FirstUseEver);
+		
+		ImGui::Begin("Shop");
+		if(ImGui::Button("Buy Worker: 5 G")){
+			g.buyWorker();
+		}
 		ImGui::End();
 
 

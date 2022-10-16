@@ -119,6 +119,7 @@ void Game::buyWorker(){
     HandTool* pick = new HandTool(1, "Pickaxe");
     newWorker->equippedTool = pick;
     newWorker->isToolEquipped = true;
+    gold -= 5;
     workers.push_back(newWorker);
 }
 
