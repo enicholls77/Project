@@ -48,7 +48,7 @@ Game::Game(int _tickLimit, int _ticksPerSecond){ // constructor for setting cust
 // updates game state
 void Game::update(){ 
     clock_t currentTime = std::clock();
-    timeElapsed = floor(double(currentTime - startingTime) / CLOCKS_PER_SEC);
+    timeElapsed = double(currentTime - startingTime) / CLOCKS_PER_SEC;
     int tickDelta = floor(timeElapsed * ticksPerSecond) - tick;
     if (tickDelta >= 1){
         nextTick(false);

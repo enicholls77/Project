@@ -7,6 +7,7 @@
 #include "imgui.h"
 #include "../bindings/imgui_impl_opengl3.h"
 #include "../bindings/imgui_impl_glfw.h"
+#include <implot.h>
 #include "Game.h"
 
 #include<iostream>
@@ -59,7 +60,7 @@ int main()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	ImGui::StyleColorsDark();
+	// ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 410");
 
@@ -73,7 +74,10 @@ int main()
 	// glUniform1f(glGetUniformLocation(shaderProgram, "size"), size);
 	// glUniform4f(glGetUniformLocation(shaderProgram, "color"), color[0], color[1], color[2], color[3]);
 
-	Game g = Game();
+	Game g = Game(2400, 10);
+	// historical data
+	vector<int> tickHistory;
+	vector<int> miningRateHistory;
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -92,6 +96,10 @@ int main()
 		g.update();
 		int day = g.day();
 		int numWorkers = g.workers.size();
+		double miningRate = g.getTotalMiningRate();
+
+		tickHistory.push_back(g.tick);
+		miningRateHistory.push_back(miningRate);
 
 		ImGui::Begin("Stats");
 		// Text that appears in the window
@@ -99,8 +107,7 @@ int main()
 		ImGui::Text("Gold: %f G", g.gold);
 		ImGui::Text("Workers: %i", numWorkers);
 		ImGui::Text("Day: %i", day);
-		ImGui::Text("Seconds elapsed: %i", g.timeElapsed);
-		double miningRate = g.getTotalMiningRate();
+		ImGui::Text("Seconds elapsed: %f", g.timeElapsed);
 		ImGui::Text("g/tick: %f", miningRate);
 		ImGui::Text("g/day: %f", miningRate * 24);
 		ImGui::Text("s/day: %f", 24 / g.ticksPerSecond);
@@ -112,6 +119,47 @@ int main()
 		ImGui::ColorEdit4("Color", color);
 		// Ends the window
 		ImGui::End();
+
+
+		// Buffer size for all historical data is a maximum of 240 ticks 
+		// (240 seconds, 10 in-game days)
+		int start = g.goldHistory.size() <= 240 ? 0 : g.goldHistory.size() - 240;
+		int end = g.goldHistory.size();
+
+		float goldHistoryBuffer[240];
+		int j = 0;
+		for(int i=start; i<end; i++){
+			goldHistoryBuffer[j] = (float) g.goldHistory[i];
+			j++;
+		}
+
+		float scoresBuffer[240];
+		j = 0;
+		for(int i=start; i<end; i++){
+			scoresBuffer[j] = (float) g.scores[i];
+			j++;
+		}
+
+		float miningRateHistoryBuffer[240];
+		j = 0;
+		for(int i=start; i<end; i++){
+			miningRateHistoryBuffer[j] = (float) miningRateHistory[i];
+			j++;
+		}
+
+
+		ImGui::Begin("Statistics - Graphs");
+		ImGui::PlotLines("Gold Balance", goldHistoryBuffer, end - start);
+		ImGui::PlotLines("Score", scoresBuffer, end - start);
+		ImGui::PlotLines("Mining Rate", miningRateHistoryBuffer, end - start);
+		// if (ImPlot::BeginPlot("Gold Balance")) {
+			// ImPlot::PlotLine("Gold Balance", goldHistoryBuffer, end - start);
+			// ImPlot::EndPlot();
+		// }
+		ImGui::End();
+
+
+		// ImGui::End();
 
 		// Renders the ImGUI elements
 		ImGui::Render();

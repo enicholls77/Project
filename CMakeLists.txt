@@ -19,7 +19,7 @@
  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 #  add_definitions("-std=c++11")
- set(CMAKE_CXX_STANDARD 14)
+ set(CMAKE_CXX_STANDARD 17)
 
  include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
  conan_basic_setup()

@@ -15,7 +15,7 @@ class Game{
     int tickLimit = 2400; // max game length in ticks;
     int ticksPerSecond = 1; // ticks per second 
     clock_t startingTime;
-    int timeElapsed;
+    double timeElapsed;
     double score; // game score, cumulative gold collected from mining 
     double gold; // gold available to spend
     vector<Worker*> workers;
