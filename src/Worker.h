@@ -14,7 +14,6 @@ class Worker{
     bool isToolEquipped; //tells if a tool is equipped
     Tool* equippedTool;
     void upgrade(); // upgrades worker 
-    double getMiningRate();
     double mine(); // returns gold mined in one tick
 
 };

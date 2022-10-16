@@ -1,5 +1,6 @@
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 
 #include "Worker.h"
 #include "Tool.h"
@@ -23,10 +24,22 @@ Game::Game(){
     score = 0;
     scores = new double[2400]{0};   //need to make sure ticklimit isn't set too large
 
-    toolShop = new ItemShop();
+        // item shop
+    ItemShop *toolShop = new ItemShop();
+
+    // tools
+    HandTool *stonePick = new HandTool(1.5, "Stone Pick.", 10);
+    HandTool *ironPick = new HandTool(2, "Iron Pick.", 50);
+    HandTool *carbonPick = new HandTool(3, "Carbon Fibre Pick.", 200);
+
+    // adding items to shop
+    toolShop->addToItemShop(stonePick);
+    toolShop->addToItemShop(ironPick);
+    toolShop->addToItemShop(carbonPick);
+
     Worker* worker;
     worker = new Worker(5);
-    HandTool* pick = new HandTool(1, "Pickaxe");
+    HandTool* pick = new HandTool(1, "Pickaxe", 1);
     worker->equippedTool = pick;
     worker->isToolEquipped = true;
     workers.push_back(worker);
@@ -44,10 +57,22 @@ Game::Game(int _tickLimit, int _ticksPerSecond){ // constructor for setting cust
     score = 0;
     scores = new double[_tickLimit]{0};   //need to make sure ticklimit isn't set too large
 
+    // item shop
     ItemShop *toolShop = new ItemShop();
+
+    // tools
+    HandTool *stonePick = new HandTool(1.5, "Stone Pick.", 10);
+    HandTool *ironPick = new HandTool(2, "Iron Pick.", 50);
+    HandTool *carbonPick = new HandTool(3, "Carbon Fibre Pick.", 200);
+
+    // adding items to shop
+    toolShop->addToItemShop(stonePick);
+    toolShop->addToItemShop(ironPick);
+    toolShop->addToItemShop(carbonPick);
+
     Worker* worker;
     worker = new Worker(5);
-    HandTool* pick = new HandTool(1, "Pickaxe");
+    HandTool* pick = new HandTool(1, "Worn Pick.", 1);
     worker->equippedTool = pick;
     worker->isToolEquipped = true;
     workers.push_back(worker);
@@ -57,7 +82,7 @@ Game::Game(int _tickLimit, int _ticksPerSecond){ // constructor for setting cust
 }
 
 // updates game state
-void Game::update(){ 
+bool Game::update(){ 
     clock_t currentTime = std::clock();
     // timeElapsed = double(currentTime - startingTime) / CLOCKS_PER_SEC;
     std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
@@ -65,7 +90,9 @@ void Game::update(){
     int tickDelta = floor(timeElapsed * ticksPerSecond) - tick;
     if (tickDelta >= 1){
         nextTick(false);
+        return true;
     }
+    return false;
 }
 
 // moves the game forward in time, and calls mine() on all miners. Is called in main() loop;
@@ -122,7 +149,7 @@ bool Game::buyWorker(){
     }
     Worker* newWorker;
     newWorker = new Worker(5);
-    HandTool* pick = new HandTool(1, "Pickaxe");
+    HandTool* pick = new HandTool(1, "Pickaxe", 1);
     newWorker->equippedTool = pick;
     newWorker->isToolEquipped = true;
     gold -= workerPrice;
@@ -135,11 +162,19 @@ Game::~Game(){
     workerShop.clear();
 }
 
-bool Game::buyTool(int positionInShop, Worker *workerEquipping){
+bool Game::buyTool(int positionInShop){
     double price = toolShop->toolList[positionInShop]->price;
     if(price > gold){
         return false;
     }
+    // sorts workers - ascending by mining rate
+    std::sort( workers.begin(), workers.end(), []( Worker* a, Worker* b ) -> bool 
+        { 
+            return (bool)(a->mine() < b->mine()); 
+        } 
+    );
+    Worker* workerEquipping = workers[0];
+
     toolShop->buyItem(positionInShop, workerEquipping);
     return true;
 }
