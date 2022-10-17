@@ -7,10 +7,12 @@ using namespace std;
 double Tool::getBaseRate(){
     return baseRate;
 }
-//retrieves tool name for display purposes
-string Tool::returnToolName(){
-    return toolName;
-}
+
+// //retrieves tool name for display purposes
+// string Tool::returnToolName(){
+//     return toolName;
+// }
+
 //if not already upgraded, doubles base rate of tool
 void Tool::upgrade(){
     if (upgraded == 0){

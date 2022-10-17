@@ -168,7 +168,7 @@ int main()
 		ImGui::PlotLines("Mining Rate", miningRateBuffer, miningRateHistory.size());
 		ImGui::End();
 
-		ImGui::SetNextWindowSize(ImVec2(315, 200), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowSize(ImVec2(315, 300), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowPos(ImVec2(60,300), ImGuiCond_FirstUseEver);
 		
 		ImGui::Begin("Shop");
@@ -186,7 +186,7 @@ int main()
 		}
 
 		char buyUpgradeAllText[30];
-		std::sprintf(buyUpgradeAllText, "Upgrade All Tools %.1f G", (g.upgradeAllBasePrice*g.workersToUpgrade));
+		std::sprintf(buyUpgradeAllText, "Upgraded All Tools %.1f G", (g.upgradeAllBasePrice*g.workersToUpgrade));
 		if(ImGui::Button(buyUpgradeAllText)){
 			if (g.workersToUpgrade==0){
 				logger.AddLog("No workers to upgrade!\n");
@@ -226,22 +226,22 @@ int main()
 
 
 
-		// for(int i=0; i<=g.toolShop->numberOfTools; i++){
-		// 	char buyToolText[200];
-		// 	Tool* item = g.toolShop->toolList[i];
+		for(int i=0; i<g.toolShop.size(); i++){
+			char buyToolText[40];
+			double priceTest = 10.0;
+			std::sprintf(buyToolText, "Buy %s: %.1f G", g.toolShop[i]->toolName.c_str(), g.toolShop[i]->price);
 
-		// 	std::sprintf(buyToolText, "Buy %.1f G", , item->price);
+			if(ImGui::Button(buyToolText)){
+				bool bought = g.buyTool(i);
+				if(bought){
+					logger.AddLog("Bought Tool\n");
+				} else{
+					char msg[] = "Cannot buy tool!!! (don't be poor lol)\n";
+					logger.AddLog("%s", msg);
+				}
+			}
+		}
 
-		// 	if(ImGui::Button(buyToolText)){
-		// 		bool bought = g.buyTool(i);
-		// 		if(bought){
-		// 			logger.AddLog("Bought Tool\n");
-		// 		} else{
-		// 			char msg[] = "Cannot buy tool!!! (don't be poor lol)\n";
-		// 			logger.AddLog("%s", msg);
-		// 		}
-		// 	}
-		// }
 		ImGui::End();
 
 		ImGui::SetNextWindowSize(ImVec2(325, 200), ImGuiCond_FirstUseEver);

@@ -31,18 +31,23 @@ Game::Game(){
     powerableTools = 0;
     scores = new double[2400]{0};   //need to make sure ticklimit isn't set too large
 
-        // item shop
-    ItemShop *toolShop = new ItemShop();
-
-    // tools
+    //adding tools to game
     HandTool *stonePick = new HandTool(1.5, "Stone Pick.", 10);
     HandTool *ironPick = new HandTool(2, "Iron Pick.", 50);
-    HandTool *carbonPick = new HandTool(3, "Carbon Fibre Pick.", 200);
+    HandTool *carbonPick = new HandTool(3, "Carbon Fibre Pick.", 100);
+    PowerTool *steelDrill = new PowerTool(2, "Steel Drill", 4, 200);
+    PowerTool *diamondDrill = new PowerTool(2, "Diamond Drill", 8, 300);
+    MegaDrill *megaDrill = new MegaDrill(4, "Mega Drill", 16, 500);
+    MegaDrill *diamondMegaDrill = new MegaDrill(4, "Diamond Mega Drill", 46, 1000);
 
     // adding items to shop
-    toolShop->addToItemShop(stonePick);
-    toolShop->addToItemShop(ironPick);
-    toolShop->addToItemShop(carbonPick);
+    addTool(stonePick);
+    addTool(ironPick);
+    addTool(carbonPick);
+    addTool(steelDrill);
+    addTool(diamondDrill);
+    addTool(megaDrill);
+    addTool(diamondMegaDrill);
 
     Worker* worker;
     worker = new Worker(5);
@@ -73,18 +78,23 @@ Game::Game(int _tickLimit, int _ticksPerSecond){ // constructor for setting cust
     powerableTools = 0;
     scores = new double[_tickLimit]{0};   //need to make sure ticklimit isn't set too large
 
-    // item shop
-    ItemShop *toolShop = new ItemShop();
-
     // tools
     HandTool *stonePick = new HandTool(1.5, "Stone Pick.", 10);
-    HandTool *ironPick = new HandTool(2, "Iron Pick.", 50);
-    HandTool *carbonPick = new HandTool(3, "Carbon Fibre Pick.", 200);
+    HandTool *ironPick = new HandTool(2, "Iron Pick.", 5);
+    HandTool *carbonPick = new HandTool(3, "Carbon Fibre Pick.", 1);
+    PowerTool *steelDrill = new PowerTool(2, "Steel Drill", 4, 2);
+    PowerTool *diamondDrill = new PowerTool(2, "Diamond Drill", 8, 3);
+    MegaDrill *megaDrill = new MegaDrill(4, "Mega Drill", 16, 5);
+    MegaDrill *diamondMegaDrill = new MegaDrill(4, "Diamond Mega Drill", 46, 10);
 
     // adding items to shop
-    toolShop->addToItemShop(stonePick);
-    toolShop->addToItemShop(ironPick);
-    toolShop->addToItemShop(carbonPick);
+    addTool(stonePick);
+    addTool(ironPick);
+    addTool(carbonPick);
+    addTool(steelDrill);
+    addTool(diamondDrill);
+    addTool(megaDrill);
+    addTool(diamondMegaDrill);
 
     Worker* worker;
     worker = new Worker(5);
@@ -183,7 +193,7 @@ Game::~Game(){
 }
 
 bool Game::buyTool(int positionInShop){
-    double price = toolShop->toolList[positionInShop]->price;
+    double price = toolShop[positionInShop]->price;
     if(price > gold){
         return false;
     }
@@ -193,14 +203,16 @@ bool Game::buyTool(int positionInShop){
             return (bool)(a->mine() < b->mine()); 
         } 
     );
+    gold -= price;
     Worker* workerEquipping = workers[0];
 
-    toolShop->buyItem(positionInShop, workerEquipping);
+    workerEquipping->equippedTool = toolShop[positionInShop];
+    toolShop.erase(toolShop.begin() + positionInShop);
     return true;
 }
 
 void Game::addTool(Tool *toolAdded){
-    toolShop->addToItemShop(toolAdded);
+    toolShop.push_back(toolAdded);
 }
 
 bool Game::upgradeAll(){
@@ -229,7 +241,7 @@ void Game::checkPowerableTools(){
     powerableTools = 0;
     for (int i = 0; i < workers.size(); i++){
         if (workers[i]->equippedTool->powerTool == true){
-            workersToUpgrade++;
+            powerableTools++;
         }
     }
 }

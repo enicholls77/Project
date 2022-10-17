@@ -31,12 +31,13 @@ class Game{
     int workersToUpgrade; //number of unupgraded workers
     double workerPrice; //price of new worker, doubles for every worker bought
     bool powerSupplied; //tells if the Powered boost is enabled
-    int powerableTools; //tells number of powerable tools
+    int powerableTools; //tells number of powerable tools   
     int powerSuppliedTickLength; //number of ticks power should be supplied for
     int poweringFor; //number of ticks left before unpowering tools
-    vector<Worker*> workers;
-    vector<Worker*> workerShop;
-    ItemShop *toolShop;
+    vector<Worker*> workers; //vector containing all active workers
+    vector<Worker*> workerShop; //vector containing purchaseable workers
+    vector<Tool *> toolShop; //
+    //ItemShop *toolShop;
     vector<double> goldMined; // gold mined per tick
     vector<double> goldHistory; // gold balance history 
     //vector<double> scores; // score history
