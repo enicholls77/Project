@@ -27,8 +27,13 @@ class Game{
     double score; // game score, cumulative gold collected from mining 
     double gold; // gold available to spend
     double upgradeAllBasePrice = 100; //price to upgrade all tools
+    double poweringBasePrice; //price to supply power per powerable unit
     int workersToUpgrade; //number of unupgraded workers
     double workerPrice; //price of new worker, doubles for every worker bought
+    bool powerSupplied; //tells if the Powered boost is enabled
+    int powerableTools; //tells number of powerable tools
+    int powerSuppliedTickLength; //number of ticks power should be supplied for
+    int poweringFor; //number of ticks left before unpowering tools
     vector<Worker*> workers;
     vector<Worker*> workerShop;
     ItemShop *toolShop;
@@ -42,13 +47,14 @@ class Game{
     // bool isPaused; game pause?
     int day(); // returns days passed since game started (24 ticks is one day)
     ~Game(); // destructor
-    void powerCurrentTools(); //gives power to all tools currently equipped. Must be rebought if new tools are bought.
+    bool powerCurrentTools(); //gives power to all tools currently equipped. Must be rebought if new tools are bought.
     void clearScores(); //deletes array of scores
     bool buyWorker(); //buys a new worker
     bool buyTool(int positionInShop); //buying an tool from the tool shop
     void addTool(Tool *toolAdded); //adding a tool to the tool shop
     bool upgradeAll(); //upgrades tools of all workers
     void checkWorkersToUpgrade(); //checks number of workers to upgrade
+    void checkPowerableTools(); //checks number of powerable tools
 };
 
 #endif //GAME_H

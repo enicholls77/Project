@@ -5,11 +5,12 @@
 using namespace std;
 
 //Same constructor as PowerTool, however 
-MegaDrill::MegaDrill(double baseRate_, string toolName_, double poweredMultiplier_){
+MegaDrill::MegaDrill(double baseRate_, string toolName_, double poweredMultiplier_, double _price){
     baseRate = baseRate_;
     toolName = toolName_;
     poweredMultiplier = poweredMultiplier_;
-    price = 100;
+    price = _price;
+    powerTool = 1;
 }
 
 void MegaDrill::upgrade(){

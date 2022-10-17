@@ -11,7 +11,7 @@ class MegaDrill: public PowerTool{
 public:
 
     //constructor for mega drill
-    MegaDrill(double baseRate_, string toolName_, double poweredMultiplier_);
+    MegaDrill(double baseRate_, string toolName_, double poweredMultiplier_, double _price);
     //upgrading which will be better that PowerTool's upgrade
     void upgrade();
 

@@ -17,7 +17,7 @@ class PowerTool: public Tool{
     PowerTool();
 
     //constructor with all variables
-    PowerTool(double baseRate_, string toolName_, double poweredMultiplier_);
+    PowerTool(double baseRate_, string toolName_, double poweredMultiplier_, double _price);
 
     //uses ability, which will be seperate from MegaDrill's upgrade
     virtual void upgrade();

@@ -21,3 +21,7 @@ void Tool::upgrade(){
 void Tool::setPowered(){
     powered = 1;
 }
+
+void Tool::setUnPowered(){
+    powered = 0;
+}

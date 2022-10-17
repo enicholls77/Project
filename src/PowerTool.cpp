@@ -10,16 +10,18 @@ double PowerTool::getMiningMultiplier() {
 //changes status of powered based upon if the tool will be able to be powered or not
 //to be used by TheGame class
 
-PowerTool::PowerTool(double baseRate_, string toolName_, double poweredMultiplier_){
+PowerTool::PowerTool(double baseRate_, string toolName_, double poweredMultiplier_, double _price){
     baseRate = baseRate_;
     toolName = toolName_;
     poweredMultiplier = poweredMultiplier_;
-    price = 20;
+    price = _price;
+    powerTool = 1;
 }
 PowerTool::PowerTool(){
     baseRate = 0;
     toolName = "Error: Not real Tool";
     poweredMultiplier = 0;
+    powerTool = 1;
 }
 //if not already upgraded, base rate and power multiplier are doubled
 void PowerTool::upgrade(){

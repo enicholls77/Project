@@ -27,9 +27,12 @@ class Tool {
     //virtual powering for power tools once powered
     void setPowered();
     // price of tool
+    void setUnPowered();
     double price;
     //shows if tool is upgraded or not
     bool upgraded;
+    //tells if the tools is a PowerTool or not
+    bool powerTool;
     
 
 };

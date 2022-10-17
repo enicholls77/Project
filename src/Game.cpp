@@ -24,7 +24,11 @@ Game::Game(){
     score = 0;
     workersToUpgrade = 1;
     upgradeAllBasePrice = 100;
+    poweringBasePrice = 100;
     workerPrice = 10;
+    powerSupplied = 0;
+    powerSuppliedTickLength = 24;
+    powerableTools = 0;
     scores = new double[2400]{0};   //need to make sure ticklimit isn't set too large
 
         // item shop
@@ -62,7 +66,11 @@ Game::Game(int _tickLimit, int _ticksPerSecond){ // constructor for setting cust
     score = 0;
     workersToUpgrade = 1;
     upgradeAllBasePrice = 100;
+    poweringBasePrice = 100;
     workerPrice = 10;
+    powerSupplied = 0;
+    powerSuppliedTickLength = 24;
+    powerableTools = 0;
     scores = new double[_tickLimit]{0};   //need to make sure ticklimit isn't set too large
 
     // item shop
@@ -116,6 +124,15 @@ void Game::nextTick(bool _manual){
     scores[tick] = score;           //allocated score value as 
     goldHistory.push_back(gold);
     checkWorkersToUpgrade();
+    checkPowerableTools();
+    if(poweringFor>0){
+        poweringFor--;  //deincrements powerFor by 1 every tick while it is above 0
+        if (poweringFor == 0){ //once poweringFor has become zero, power down all tools (Maybe add UI log message?)
+            for(int i = 0; i < workers.size(); i++){ 
+                workers[i]->equippedTool->setUnPowered();
+            }
+        }
+    }
     // TODO: Yuck
     if(!_manual){
         int tickDelta = floor(timeElapsed * ticksPerSecond) - tick;
@@ -138,15 +155,6 @@ double Game::getTotalMiningRate(){
     }
 
     return gPerTick;
-}
-
-void Game::powerCurrentTools(){
-    if (gold >= 100) {
-        gold = gold - 100;
-        for (int i = 0;i < workers.size();i++) {
-            workers[i]->equippedTool->setPowered();
-        }
-    }
 }
 
 void Game::clearScores(){
@@ -215,4 +223,25 @@ void Game::checkWorkersToUpgrade(){
             workersToUpgrade++;
         }
     }
+}
+
+void Game::checkPowerableTools(){
+    powerableTools = 0;
+    for (int i = 0; i < workers.size(); i++){
+        if (workers[i]->equippedTool->powerTool == true){
+            workersToUpgrade++;
+        }
+    }
+}
+
+bool Game::powerCurrentTools(){
+    if (gold >= poweringBasePrice * powerableTools) {
+        gold = gold - poweringBasePrice * powerableTools;
+        for (int i = 0;i < workers.size();i++) {
+            workers[i]->equippedTool->setPowered();
+        }
+        poweringFor = powerSuppliedTickLength;
+        return true;
+    }
+    return false;
 }

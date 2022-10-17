@@ -20,5 +20,6 @@ HandTool::HandTool(double baseRate_, string toolName_, double _price){
     baseRate = baseRate_;
     toolName = toolName_;
     upgraded = 0;
+    powerTool = 0;
     price = _price;
 }

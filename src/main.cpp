@@ -127,6 +127,7 @@ int main()
 		ImGui::Text("Workers: %i", numWorkers);
 		ImGui::Text("Day: %i", day);
 		ImGui::Text("Seconds elapsed: %.2f", g.timeElapsed);
+		ImGui::Text("Powering for: %i", g.poweringFor);
 		ImGui::Text("G/tick: %.2f", miningRate);
 		ImGui::Text("G/day: %.2f", miningRate * 24);
 		ImGui::Text("s/day: %.2d", 24 / g.ticksPerSecond);
@@ -197,6 +198,27 @@ int main()
 				} 
 				else{
 					char msg[] = "Could not upgrade tools, back to mining!\n";
+					logger.AddLog("%s", msg);
+				}
+			}
+		}
+
+		char supplyingPowerText[30];
+		std::sprintf(supplyingPowerText, "Supply Power %.1f G", (g.poweringBasePrice * g.powerableTools));
+		if(ImGui::Button(supplyingPowerText)){
+			if (g.powerSupplied==1){
+				logger.AddLog("Power is already supplied!\n");
+			}
+			else if(g.powerableTools == 0){
+				logger.AddLog("No tools to power!\n");
+			}
+			else {
+				bool bought = g.powerCurrentTools();
+				if(bought){
+					logger.AddLog("Power supplied for 1 day! Get cracking!\n");
+				} 
+				else{
+					char msg[] = "Could not power tools. Don't quit your day job just yet...\n";
 					logger.AddLog("%s", msg);
 				}
 			}
