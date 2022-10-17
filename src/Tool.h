@@ -33,7 +33,7 @@ class Tool {
     bool upgraded;
     //tells if the tools is a PowerTool or not
     bool powerTool;
-    
+    virtual Tool * clone () const = 0;  // Virtual constructor (copying) 
 
 };
 

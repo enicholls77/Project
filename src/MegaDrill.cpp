@@ -22,3 +22,7 @@ void MegaDrill::upgrade(){
         poweredMultiplier = poweredMultiplier * 5;
     }
 }
+
+MegaDrill* MegaDrill::clone() const  {
+    return new MegaDrill (*this);
+}
