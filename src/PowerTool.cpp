@@ -8,7 +8,7 @@ double PowerTool::getMiningMultiplier() {
     return (getBaseRate() + powered * poweredMultiplier);
 }
 //changes status of powered based upon if the tool will be able to be powered or not
-//to be used by TheGame class
+//to be used by The Game class
 
 PowerTool::PowerTool(double baseRate_, string toolName_, double poweredMultiplier_, double _price){
     baseRate = baseRate_;
@@ -33,4 +33,9 @@ void PowerTool::upgrade(){
         baseRate = baseRate * 3;
         poweredMultiplier = poweredMultiplier * 3;
     }
+
+}
+
+PowerTool* PowerTool::clone() const  {
+    return new PowerTool (*this);
 }

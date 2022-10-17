@@ -23,3 +23,7 @@ HandTool::HandTool(double baseRate_, string toolName_, double _price){
     powerTool = 0;
     price = _price;
 }
+
+HandTool* HandTool::clone() const  {
+    return new HandTool (*this);
+}

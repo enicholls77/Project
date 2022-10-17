@@ -21,5 +21,6 @@ class PowerTool: public Tool{
 
     //uses ability, which will be seperate from MegaDrill's upgrade
     virtual void upgrade();
+    virtual PowerTool * clone () const;  // Virtual constructor (copying) 
 };
 #endif //POWERTOOL_H

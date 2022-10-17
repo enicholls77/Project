@@ -3,7 +3,8 @@
 #include <string.h>
 using namespace std;
 
-Worker::Worker(int _price){// constructor, sets sell price of worker;
+Worker::Worker(int _price, int _id){// constructor, sets sell price of worker;
+    id = _id;
     price = _price;
     miningRate = 1;
 }
