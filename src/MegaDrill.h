@@ -14,7 +14,7 @@ public:
     MegaDrill(double baseRate_, string toolName_, double poweredMultiplier_, double _price);
     //upgrading which will be better that PowerTool's upgrade
     void upgrade();
-    virtual MegaDrill* MegaDrill::clone() const;
+    virtual MegaDrill* clone() const;
 
 };
 #endif

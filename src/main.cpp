@@ -405,7 +405,7 @@ int main()
 						ImGui::PushID(69420); // hehe
 						ImGui::TableNextRow();
 						ImGui::TableNextColumn();
-						char *idText;
+						char idText[100];
 						std::sprintf(idText, "%d", worker->id);
 						if(ImGui::Selectable(idText)){ selectedWorker = worker; }
 						ImGui::TableNextColumn();
