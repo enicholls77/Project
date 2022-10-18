@@ -31,10 +31,10 @@
 
  enable_testing()
 
- aux_source_directory(test/integration inttests)
+ aux_source_directory(test/unit unittests)
 
  add_executable(
-  integration_tests
+  unit_tests
   src/Tool.cpp
   src/HandTool.cpp
   src/PowerTool.cpp
@@ -42,14 +42,16 @@
   src/ItemShop.cpp
   src/Worker.cpp
   src/Game.cpp
-  ${inttests}
+  src/testing/MockHandTool.h
+  src/testing/MockWorker.h
+  ${unittests}
  )
 
 target_link_libraries(
-  integration_tests
+  unit_tests
   ${CONAN_LIBS}
   # GTest::gtest_main
 )
 
 include(GoogleTest)
-gtest_discover_tests(integration_tests)
+gtest_discover_tests(unit_tests)

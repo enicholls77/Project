@@ -1,13 +1,8 @@
 [requires]
-sfml/2.5.1
 gtest/1.10.0
 glad/0.1.36
 imgui/1.87
-implot/0.14
 glfw/3.3.8
-
-[options]
-sfml:shared=True
 
 [generators]
 cmake

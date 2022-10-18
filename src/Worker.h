@@ -14,7 +14,7 @@ class Worker{
     int id; // id of worker
     bool isToolEquipped; //tells if a tool is equipped
     Tool* equippedTool; //equipped tool
-    double mine(); // returns gold mined in one tick
+    virtual double mine(); // returns gold mined in one tick
 
 };
 
