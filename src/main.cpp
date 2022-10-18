@@ -228,7 +228,7 @@ int main()
 		}
 
 		// source of inspiration when adding ui features
-		ImGui::ShowDemoWindow();
+		// ImGui::ShowDemoWindow();
 
 		ImGui::SetNextWindowSize(ImVec2(315, 200), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowPos(ImVec2(400,60), ImGuiCond_FirstUseEver);
