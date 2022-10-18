@@ -392,7 +392,6 @@ int main()
 				{
 					// Display a data item
 					Worker* worker = g.workers[row_n];
-					ImGui::PushID(69420); // hehe
 					ImGui::TableNextRow();
 					ImGui::TableNextColumn();
 					char idText[100];
@@ -403,13 +402,13 @@ int main()
 					ImGui::TableNextColumn();
 					ImGui::TextUnformatted(worker->equippedTool->toolName.c_str());
 					// upgrading column
+					ImGui::TableNextColumn();
 					char upIcon[100];
 					std::sprintf(upIcon, "UPGRADE %.2f G", g.upgradeAllBasePrice);
 					bool upgraded = worker->equippedTool->upgraded;
 					if(upgraded){
 						std::sprintf(upIcon, "MAXXED");
 					}
-					ImGui::TableNextColumn();
 					// TODO: only miner closest to top of table can be upgraded???
 					if(ImGui::SmallButton(upIcon)){
 						if(!upgraded){
