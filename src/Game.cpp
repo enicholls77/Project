@@ -17,7 +17,6 @@ using namespace std;
 // default constructor
 Game::Game(){
     tick = 0;
-    tickLimit = 2400;
     ticksPerSecond = 1; 
     gold = 0;
     score = 0;
@@ -64,9 +63,8 @@ Game::Game(){
 
 }
 
-Game::Game(int _tickLimit, int _ticksPerSecond){ // constructor for setting custom params;
+Game::Game(int _ticksPerSecond){ // constructor for setting custom params;
     tick = 0;
-    tickLimit = _tickLimit;
     ticksPerSecond = _ticksPerSecond; 
     gold = 0;
     score = 0;

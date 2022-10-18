@@ -17,9 +17,8 @@ class Game{
    
     public:
     Game(); // default constructor;
-    Game(int _tickLimit, int _ticksPerSecond); // constructor for setting custom params and debugging;
+    Game(int _ticksPerSecond); // constructor for setting custom params and debugging;
     int tick = 0; // one tick is 1 hr in game;
-    int tickLimit = 2400; // max game length in ticks;
     int ticksPerSecond = 1; // ticks per second 
     int nextId = 0;
     std::chrono::steady_clock::time_point startingTime;

@@ -24,7 +24,6 @@ Game game = Game();
 TEST(TestGameInstance, DefaultSettings){
     EXPECT_EQ(0, game.tick) << "initial tick is not 0" << std::endl;
     EXPECT_EQ(1, game.ticksPerSecond) << "tps is not 1" << std::endl;
-    EXPECT_EQ(2400, game.tickLimit) << "tick limit is not 2400 ticks" << std::endl;
     EXPECT_TRUE(instanceof<Worker>(game.workers[0])) << "there is no worker at tick 0" << std::endl;
 }
 

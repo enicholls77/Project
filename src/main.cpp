@@ -13,6 +13,8 @@
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 
+#define DEBUG 1
+
 
 void error_callback( int error, const char *msg ) {
     std::string s;
@@ -105,7 +107,11 @@ int main()
 	// glUniform1f(glGetUniformLocation(shaderProgram, "size"), size);
 	// glUniform4f(glGetUniformLocation(shaderProgram, "color"), color[0], color[1], color[2], color[3]);
 
-	Game g = Game(2400, 1);
+	int tickRate = 1;
+	if(DEBUG){
+		tickRate = 10;
+	}
+	Game g = Game(tickRate);
 	// historical data
 	vector<int> tickHistory;
 	vector<float> miningRateHistory;
@@ -153,6 +159,9 @@ int main()
 		}
 
 		ImGui::Begin("Stats");
+		// if(DEBUG){
+		// 	ImGui::DragInt("tps", &g.ticksPerSecond, 1, 0, 1000);
+		// }
 		// Text that appears in the window
 		ImGui::Text("Hello there adventurer!");
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Gold: %.2f G", g.gold);
@@ -219,7 +228,7 @@ int main()
 		}
 
 		// source of inspiration when adding ui features
-		// ImGui::ShowDemoWindow();
+		ImGui::ShowDemoWindow();
 
 		ImGui::SetNextWindowSize(ImVec2(315, 200), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowPos(ImVec2(400,60), ImGuiCond_FirstUseEver);
