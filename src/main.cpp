@@ -20,6 +20,13 @@ void error_callback( int error, const char *msg ) {
     std::cerr << s << std::endl;
 }
 
+
+// checks if something is an instance of something
+template<typename Base, typename T>
+inline bool instanceof(const T *ptr) {
+   return dynamic_cast<const Base*>(ptr) != nullptr;
+}
+
 // worker table display column enums
 enum WorkerTableColumns{
 	WorkerSelect,
@@ -29,59 +36,19 @@ enum WorkerTableColumns{
 	WorkerUpgrade
 };
 
-// class SortSpecCache {
-
-// private:
-//     static SortSpecCache* instance;
-
-//     SortSpecCache() {
-//         // private to prevent anyone else from instantiating
-//     }
-
-//  public:
-// 	static const ImGuiTableSortSpecs* s_current_sort_specs;
-
-
-//     static SortSpecCache* getInstance(){
-//         if(!instance){
-//             instance = new SortSpecCache();
-//         }
-//         return instance;
-//     }
-
-// };
-
-// SortSpecCache *SortSpecCache::instance = 0;
-
-// singleton for storing sorting spec for worker table columns
-
-// int compareWorkers(const void* lhs, const void* rhs){
-//     Worker* a = (Worker*)lhs;
-//     Worker* b = (Worker*)rhs;
-//     for (int n = 0; n < 2; n++)
-//     {
-//         // Here we identify columns using the ColumnUserID value that we ourselves passed to TableSetupColumn()
-//         // We could also choose to identify columns based on their index (sort_spec->ColumnIndex), which is simpler!
-// 		SortSpecCache* cache = SortSpecCache::getInstance();
-//         const ImGuiTableColumnSortSpecs* sort_spec = &cache->s_current_sort_specs->Specs[n];
-//         int delta = 0;
-//         switch (sort_spec->ColumnUserID)
-//         {
-//         case WorkerId:           			delta = (a->id - b->id);                									break;
-//         case WorkerMiningRate:           	delta = (a->mine() - b->mine());     										break;
-//         case WorkerTool:           			delta = (strcmp(a->equippedTool->toolName.c_str(), b->equippedTool->toolName.c_str()));     break;
-//         default: IM_ASSERT(0); break;
-//         }
-//         if (delta > 0)
-//             return (sort_spec->SortDirection == ImGuiSortDirection_Ascending) ? +1 : -1;
-//         if (delta < 0)
-//             return (sort_spec->SortDirection == ImGuiSortDirection_Ascending) ? -1 : +1;
-//     }
-
-//     // qsort() is instable so always return a way to differenciate items.
-//     // Your own compare function may want to avoid fallback on implicit sort specs e.g. a Name compare if it wasn't already part of the sort specs.
-//     return (a->id - b->id);
-// }
+// HelpMarker
+static void HelpMarker(const char* desc)
+{
+    ImGui::TextDisabled("(?)");
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted(desc);
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+}
 
 
 int main()
@@ -138,7 +105,7 @@ int main()
 	// glUniform1f(glGetUniformLocation(shaderProgram, "size"), size);
 	// glUniform4f(glGetUniformLocation(shaderProgram, "color"), color[0], color[1], color[2], color[3]);
 
-	Game g = Game(2400, 1);
+	Game g = Game(2400, 100);
 	// historical data
 	vector<int> tickHistory;
 	vector<float> miningRateHistory;
@@ -209,7 +176,7 @@ int main()
 		int start = g.goldHistory.size() <= 240 ? 0 : g.goldHistory.size() - 240;
 		int end = g.goldHistory.size();
 
-		float goldHistoryBuffer[240];
+		float* goldHistoryBuffer = (float*) malloc(240 * sizeof(float));
 		float minGold = 0;
 		float maxGold = 0;
 		if(end > 0){
@@ -230,7 +197,7 @@ int main()
 			j++;
 		}
 
-		float scoresBuffer[240];
+		float* scoresBuffer = (float*) malloc(240 * sizeof(float));
 		float minScore = 0;
 		float maxScore = 0;
 		if(end > 0){
@@ -319,6 +286,14 @@ int main()
 				}
 			}
 		}
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+			ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Supplies power to drills and increases mining rate");
+			ImGui::PopTextWrapPos();
+			ImGui::EndTooltip();
+		}
 
 		for(int i=0; i<g.toolShop.size(); i++){
 			char buyToolText[40];
@@ -334,6 +309,26 @@ int main()
 					logger.AddLog("%s", msg);
 				}
 			}
+
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::BeginTooltip();
+				ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+				ImGui::Text("g/tick: %f\n", g.toolShop[i]->getBaseRate());
+				ImGui::Text("Upgraded g/tick: %f\n", g.toolShop[i]->getBaseRate() * 2);
+				if(g.toolShop[i]->powerTool){
+					PowerTool* pt = static_cast<PowerTool*>(g.toolShop[i]);
+					ImGui::Text("Powered g/tick: %f\n", pt->poweredMultiplier + pt->getBaseRate());
+					double upMultiplier = 3;
+					if(instanceof<MegaDrill>(g.toolShop[i])){
+						upMultiplier = 5;
+					}
+					ImGui::Text("Upgraded + Powered g/tick: %f\n", upMultiplier * (pt->poweredMultiplier + pt->getBaseRate()));
+				}
+				ImGui::PopTextWrapPos();
+				ImGui::EndTooltip();
+			}
+
 		}
 
 		ImGui::End();
@@ -343,102 +338,79 @@ int main()
 
 		ImGui::Begin("Workers");
 		ImGui::Text("Selected Worker: %d", selectedWorker->id);
-		if (ImGui::TreeNode("Workers"))
+		ImGui::SameLine(); HelpMarker("Select a worker by clicking on a worker ID");
+
+		// Options
+		static ImGuiTableFlags flags =
+			ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
+			| ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_NoBordersInBody
+			| ImGuiTableFlags_ScrollY;
+
+		if (ImGui::BeginTable("table_sorting", 4, flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 15), 0.0f))
 		{
-			// Create item list
-			// static ImVector<MyItem> items;
-			// if (items.Size == 0)
-			// {
-			// 	items.resize(50, MyItem());
-			// 	for (int n = 0; n < items.Size; n++)
+			// Declare columns
+			// We use the "user_id" parameter of TableSetupColumn() to specify a user id that will be stored in the sort specifications.
+			// This is so our sort function can identify a column given our own identifier. We could also identify them based on their index!
+			// Demonstrate using a mixture of flags among available sort-related flags:
+			// - ImGuiTableColumnFlags_DefaultSort
+			// - ImGuiTableColumnFlags_NoSort / ImGuiTableColumnFlags_NoSortAscending / ImGuiTableColumnFlags_NoSortDescending
+			// - ImGuiTableColumnFlags_PreferSortAscending / ImGuiTableColumnFlags_PreferSortDescending
+			ImGui::TableSetupColumn("id",       ImGuiTableColumnFlags_DefaultSort          | ImGuiTableColumnFlags_WidthStretch,   0.0f, WorkerId);
+			ImGui::TableSetupColumn("G/tick", ImGuiTableColumnFlags_PreferSortAscending | ImGuiTableColumnFlags_WidthStretch, 0.0f, WorkerMiningRate);
+			ImGui::TableSetupColumn("Tool", ImGuiTableColumnFlags_PreferSortDescending | ImGuiTableColumnFlags_WidthStretch, 0.0f, WorkerTool);
+			ImGui::TableSetupColumn("Upgrade", ImGuiTableColumnFlags_PreferSortDescending | ImGuiTableColumnFlags_WidthStretch, 0.0f, WorkerUpgrade);
+			ImGui::TableSetupScrollFreeze(0, 1); // Make row always visible
+			ImGui::TableHeadersRow();
+
+			// TODO: Sort our data if sort specs have been changed!
+
+			// SortSpecCache* cache = SortSpecCache::getInstance();
+			// if (ImGuiTableSortSpecs* sorts_specs = ImGui::TableGetSortSpecs())
+			// 	if (sorts_specs->SpecsDirty)
 			// 	{
-			// 		const int template_n = n % IM_ARRAYSIZE(template_items_names);
-			// 		MyItem& item = items[n];
-			// 		item.ID = n;
-			// 		item.Name = template_items_names[template_n];
-			// 		item.Quantity = (n * n - n) % 20; // Assign default quantities
+			// 		cache->s_current_sort_specs = sorts_specs; // Store in variable accessible by the sort function.
+			// 		if (g.workers.size() > 1)
+			// 			qsort(&g.workers[0], (size_t)g.workers.size(), sizeof(g.workers[0]), compareWorkers);
+			// 		cache->s_current_sort_specs = NULL;
+			// 		sorts_specs->SpecsDirty = false;
 			// 	}
-			// }
 
-			// Options
-			static ImGuiTableFlags flags =
-				ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
-				| ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_NoBordersInBody
-				| ImGuiTableFlags_ScrollY;
-			// PushStyleCompact();
-			// ImGui::CheckboxFlags("ImGuiTableFlags_SortMulti", &flags, ImGuiTableFlags_SortMulti);
-			// ImGui::SameLine(); HelpMarker("When sorting is enabled: hold shift when clicking headers to sort on multiple column. TableGetSortSpecs() may return specs where (SpecsCount > 1).");
-			// ImGui::CheckboxFlags("ImGuiTableFlags_SortTristate", &flags, ImGuiTableFlags_SortTristate);
-			// ImGui::SameLine(); HelpMarker("When sorting is enabled: allow no sorting, disable default sorting. TableGetSortSpecs() may return specs where (SpecsCount == 0).");
-			// PopStyleCompact();
-
-			if (ImGui::BeginTable("table_sorting", 4, flags, ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 15), 0.0f))
-			{
-				// Declare columns
-				// We use the "user_id" parameter of TableSetupColumn() to specify a user id that will be stored in the sort specifications.
-				// This is so our sort function can identify a column given our own identifier. We could also identify them based on their index!
-				// Demonstrate using a mixture of flags among available sort-related flags:
-				// - ImGuiTableColumnFlags_DefaultSort
-				// - ImGuiTableColumnFlags_NoSort / ImGuiTableColumnFlags_NoSortAscending / ImGuiTableColumnFlags_NoSortDescending
-				// - ImGuiTableColumnFlags_PreferSortAscending / ImGuiTableColumnFlags_PreferSortDescending
-				ImGui::TableSetupColumn("id",       ImGuiTableColumnFlags_DefaultSort          | ImGuiTableColumnFlags_WidthStretch,   0.0f, WorkerId);
-				ImGui::TableSetupColumn("G/tick", ImGuiTableColumnFlags_PreferSortAscending | ImGuiTableColumnFlags_WidthStretch, 0.0f, WorkerMiningRate);
-				ImGui::TableSetupColumn("Tool", ImGuiTableColumnFlags_PreferSortDescending | ImGuiTableColumnFlags_WidthStretch, 0.0f, WorkerTool);
-				ImGui::TableSetupColumn("Upgrade", ImGuiTableColumnFlags_PreferSortDescending | ImGuiTableColumnFlags_WidthStretch, 0.0f, WorkerUpgrade);
-				ImGui::TableSetupScrollFreeze(0, 1); // Make row always visible
-				ImGui::TableHeadersRow();
-
-				// TODO: Sort our data if sort specs have been changed!
-
-				// SortSpecCache* cache = SortSpecCache::getInstance();
-				// if (ImGuiTableSortSpecs* sorts_specs = ImGui::TableGetSortSpecs())
-				// 	if (sorts_specs->SpecsDirty)
-				// 	{
-				// 		cache->s_current_sort_specs = sorts_specs; // Store in variable accessible by the sort function.
-				// 		if (g.workers.size() > 1)
-				// 			qsort(&g.workers[0], (size_t)g.workers.size(), sizeof(g.workers[0]), compareWorkers);
-				// 		cache->s_current_sort_specs = NULL;
-				// 		sorts_specs->SpecsDirty = false;
-				// 	}
-
-				// Demonstrate using clipper for large vertical lists
-				ImGuiListClipper clipper;
-				clipper.Begin(g.workers.size());
-				while (clipper.Step())
-					for (int row_n = clipper.DisplayStart; row_n < clipper.DisplayEnd; row_n++)
-					{
-						// Display a data item
-						Worker* worker = g.workers[row_n];
-						ImGui::PushID(69420); // hehe
-						ImGui::TableNextRow();
-						ImGui::TableNextColumn();
-						char idText[100];
-						std::sprintf(idText, "%d", worker->id);
-						if(ImGui::Selectable(idText)){ selectedWorker = worker; }
-						ImGui::TableNextColumn();
-						ImGui::Text("%.2f", worker->mine());
-						ImGui::TableNextColumn();
-						ImGui::TextUnformatted(worker->equippedTool->toolName.c_str());
-						// upgrading column
-						char upIcon[100];
-						std::sprintf(upIcon, "UPGRADE %.2f G", g.upgradeAllBasePrice);
-						bool upgraded = worker->equippedTool->upgraded;
-						if(upgraded){
-							std::sprintf(upIcon, "MAXXED");
-						}
-						ImGui::TableNextColumn();
-						// TODO: only miner closest to top of table can be upgraded???
-						if(ImGui::SmallButton(upIcon)){
-							if(!upgraded){
-								worker->equippedTool->upgrade();
-								logger.AddLog("Upgraded worker\n");
-							}
-						}
-						ImGui::PopID();
+			// Demonstrate using clipper for large vertical lists
+			ImGuiListClipper clipper;
+			clipper.Begin(g.workers.size());
+			while (clipper.Step())
+				for (int row_n = clipper.DisplayStart; row_n < clipper.DisplayEnd; row_n++)
+				{
+					// Display a data item
+					Worker* worker = g.workers[row_n];
+					ImGui::PushID(69420); // hehe
+					ImGui::TableNextRow();
+					ImGui::TableNextColumn();
+					char idText[100];
+					std::sprintf(idText, "%d", worker->id);
+					if(ImGui::Selectable(idText)){ selectedWorker = worker; }
+					ImGui::TableNextColumn();
+					ImGui::Text("%.2f", worker->mine());
+					ImGui::TableNextColumn();
+					ImGui::TextUnformatted(worker->equippedTool->toolName.c_str());
+					// upgrading column
+					char upIcon[100];
+					std::sprintf(upIcon, "UPGRADE %.2f G", g.upgradeAllBasePrice);
+					bool upgraded = worker->equippedTool->upgraded;
+					if(upgraded){
+						std::sprintf(upIcon, "MAXXED");
 					}
-				ImGui::EndTable();
-			}
-			ImGui::TreePop();
+					ImGui::TableNextColumn();
+					// TODO: only miner closest to top of table can be upgraded???
+					if(ImGui::SmallButton(upIcon)){
+						if(!upgraded){
+							worker->equippedTool->upgrade();
+							logger.AddLog("Upgraded worker\n");
+						}
+					}
+					ImGui::PopID();
+				}
+			ImGui::EndTable();
 		}
 
 		ImGui::End();
@@ -460,6 +432,9 @@ int main()
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
 		glfwPollEvents();
+		// free buffers
+		free(scoresBuffer);
+		free(goldHistoryBuffer);
 	}
 
 	// Deletes all ImGUI instances

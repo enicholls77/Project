@@ -53,8 +53,6 @@ TEST(TestGameInstance, nextTick){
     EXPECT_EQ(game.day(), 2) << "Day is incorrect" << std::endl;
 }
 
-// TODO: yuck
-
 TEST(TestGameInstance, updateFail){
     bool updated = game.update();
     EXPECT_FALSE(updated) << "Game should not update" << std::endl;
@@ -73,4 +71,25 @@ TEST(TestGameInstance, getTotalMiningRate){
     EXPECT_CALL(w, mine()).WillRepeatedly(Return(5));
     game.workers[0] = &w;
     EXPECT_EQ(5, game.getTotalMiningRate());
+}
+
+// the following tests do not use mocks
+TEST(TestGameInstance, buyWorker){
+    EXPECT_EQ(1, game.workers.size());
+    int price = game.workerPrice;
+    game.gold = 10;
+    bool bought = game.buyWorker();
+    EXPECT_TRUE(bought) << "Couldn't buy worker" << std::endl;
+    EXPECT_EQ(0, game.gold) << "Did not update gold amount to amount required" << std::endl;
+    EXPECT_EQ(2, game.workers.size());
+    // EXPECT_TRUE(instanceof<Worker>(game.workers[1])) << "No worker was added to the game after buying" << std::endl;
+    EXPECT_EQ(price * 2, game.workerPrice) << "Price of next worker was not increased by 2x" << std::endl;
+}
+
+
+TEST(TestGameInstance, checkWorkersToUpgrade){
+    EXPECT_EQ(1, game.workers.size());
+    // check workers to upgrade
+    game.checkWorkersToUpgrade();
+    EXPECT_EQ(1, game.workersToUpgrade) << "number of upgraded workers not updated properly";
 }

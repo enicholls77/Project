@@ -6,13 +6,10 @@
 using namespace std;
 
 class PowerTool: public Tool{
-    protected:
-    //bonus multiplier if powered
-    double poweredMultiplier;
-    
     public:
+    double poweredMultiplier;
     //returns multiplier for tool, which is base rate + bonus rate from if tool is powered
-    double getMiningMultiplier();
+    virtual double getMiningMultiplier();
     //basic constructor
     PowerTool();
 
