@@ -39,10 +39,10 @@
   src/HandTool.cpp
   src/PowerTool.cpp
   src/MegaDrill.cpp
-  src/ItemShop.cpp
   src/Worker.cpp
   src/Game.cpp
   src/testing/MockHandTool.h
+  src/testing/MockPowerTool.h
   src/testing/MockWorker.h
   ${unittests}
  )

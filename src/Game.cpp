@@ -7,7 +7,6 @@
 #include "HandTool.h"
 #include "PowerTool.h"
 #include "MegaDrill.h"
-#include "ItemShop.h"
 #include "Game.h"
 #include <vector>
 #include <chrono>
@@ -31,9 +30,9 @@ Game::Game(){
     powerableTools = 0;
 
     //adding tools to game
-    HandTool *stonePick = new HandTool(1.5, "Stone Pick.", 10);
-    HandTool *ironPick = new HandTool(2, "Iron Pick.", 50);
-    HandTool *carbonPick = new HandTool(3, "Diamond Pick.", 100);
+    HandTool *stonePick = new HandTool(1.5, "Stone Pick", 10);
+    HandTool *ironPick = new HandTool(2, "Iron Pick", 50);
+    HandTool *carbonPick = new HandTool(3, "Diamond Pick", 100);
     PowerTool *steelDrill = new PowerTool(2, "Steel Drill", 4, 200);
     PowerTool *diamondDrill = new PowerTool(2, "Diamond Drill", 8, 300);
     MegaDrill *megaDrill = new MegaDrill(4, "Mega Drill", 16, 500);
@@ -80,9 +79,9 @@ Game::Game(int _tickLimit, int _ticksPerSecond){ // constructor for setting cust
     powerableTools = 0;
 
     //adding tools to game
-    HandTool *stonePick = new HandTool(1.5, "Stone Pick.", 10);
-    HandTool *ironPick = new HandTool(2, "Iron Pick.", 50);
-    HandTool *carbonPick = new HandTool(3, "Diamond Pick.", 100);
+    HandTool *stonePick = new HandTool(1.5, "Stone Pick", 10);
+    HandTool *ironPick = new HandTool(2, "Iron Pick", 50);
+    HandTool *carbonPick = new HandTool(3, "Diamond Pick", 100);
     PowerTool *steelDrill = new PowerTool(2, "Steel Drill", 4, 200);
     PowerTool *diamondDrill = new PowerTool(2, "Diamond Drill", 8, 300);
     MegaDrill *megaDrill = new MegaDrill(4, "Mega Drill", 16, 500);
@@ -196,8 +195,8 @@ bool Game::buyTool(int positionInShop, Worker* workerEquipping){
     }
     gold -= price;
 
+    // clones tool from shop into worker's tool slot
     workerEquipping->equippedTool = toolShop[positionInShop]->clone();
-    // toolShop.erase(toolShop.begin() + positionInShop);
     return true;
 }
 

@@ -6,7 +6,6 @@
 #include "HandTool.h"
 #include "PowerTool.h"
 #include "MegaDrill.h"
-#include "ItemShop.h"
 #include <vector>
 #include <chrono>
 #include <string>

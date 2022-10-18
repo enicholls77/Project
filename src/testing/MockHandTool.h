@@ -18,11 +18,11 @@ class MockHandTool: public HandTool{
     //initialiser with all required variables for the class
     MockHandTool(double baseRate_, string toolName_, double _price) : 
     HandTool(baseRate_, toolName_, _price){
-        baseRate = baseRate_;
-        toolName = toolName_;
-        upgraded = 0;
-        powerTool = 0;
-        price = _price;
+        // baseRate = baseRate_;
+        // toolName = toolName_;
+        // upgraded = 0;
+        // powerTool = 0;
+        // price = _price;
     }
     // virtual HandTool* clone() const;
 
