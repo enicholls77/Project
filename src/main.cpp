@@ -102,8 +102,8 @@ int main()
 	// So that means we only have the modern functions
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Create a GLFWwindow object of 800 by 800 pixels, naming it "YoutubeOpenGL"
-	GLFWwindow* window = glfwCreateWindow(800, 800, "ImGui", NULL, NULL);
+	// Create a GLFWwindow object of 800 by 800 pixels
+	GLFWwindow* window = glfwCreateWindow(800, 800, "idleminer", NULL, NULL);
 	// Error check if the window fails to create
 	if (window == NULL)
 	{
@@ -251,6 +251,7 @@ int main()
 			j++;
 		}
 
+		// source of inspiration when adding ui features
 		// ImGui::ShowDemoWindow();
 
 		ImGui::SetNextWindowSize(ImVec2(315, 200), ImGuiCond_FirstUseEver);
@@ -266,7 +267,7 @@ int main()
 		ImGui::SetNextWindowSize(ImVec2(315, 300), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowPos(ImVec2(60,300), ImGuiCond_FirstUseEver);
 		
-		ImGui::Begin("Workers and Shop");
+		ImGui::Begin("Shop");
 
 		char buyWorkerText[20];
 		std::sprintf(buyWorkerText, "Buy Worker: %.1f G", g.workerPrice);
@@ -335,6 +336,12 @@ int main()
 			}
 		}
 
+		ImGui::End();
+
+		ImGui::SetNextWindowSize(ImVec2(315, 300), ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2(400,500), ImGuiCond_FirstUseEver);
+
+		ImGui::Begin("Workers");
 		ImGui::Text("Selected Worker: %d", selectedWorker->id);
 		if (ImGui::TreeNode("Workers"))
 		{
@@ -413,7 +420,7 @@ int main()
 						ImGui::TableNextColumn();
 						ImGui::TextUnformatted(worker->equippedTool->toolName.c_str());
 						// upgrading column
-						char upIcon[50];
+						char upIcon[100];
 						std::sprintf(upIcon, "UPGRADE %.2f G", g.upgradeAllBasePrice);
 						bool upgraded = worker->equippedTool->upgraded;
 						if(upgraded){
@@ -434,8 +441,9 @@ int main()
 			ImGui::TreePop();
 		}
 
-
 		ImGui::End();
+
+
 
 		ImGui::SetNextWindowSize(ImVec2(325, 200), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowPos(ImVec2(400,300), ImGuiCond_FirstUseEver);
