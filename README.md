@@ -1,5 +1,7 @@
 # Simple Idle Miner
 
+![img](./preview.png)
+
 ## Build Instructions
 Run the following commands:
 ### Windows (x86):
@@ -35,6 +37,8 @@ If you plan to use Visual Studio 17 2022, like I do, make sure to [install it](h
 
 `./build.bat`
 
+The executable should be in `./build/bin/idleminer.exe`
+
 ### Linux (x86) (WIP):
 - Install [Conan](https://docs.conan.io/en/latest/installation.html)
 - Follow the [Getting Started](https://docs.conan.io/en/latest/getting_started.html) guide
@@ -50,6 +54,8 @@ This will allow conan to install system dependencies automatically
 - Build:
 
 `./build.sh`
+
+The executable should be in `./build/bin/idleminer`
 
 ### MacOS (M1 - ARM) (WIP):
 - Install [Homebrew](https://brew.sh/)
@@ -70,6 +76,8 @@ then attempt to build again.
 sudo cp build/bin/*.dylib /usr/local/lib/
 ./build.sh
 ```
+
+The executable should be in `./build/bin/idleminer`
 
 
 ## Testing
