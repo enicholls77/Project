@@ -15,20 +15,6 @@
 
 #define DEBUG 1
 
-
-void error_callback( int error, const char *msg ) {
-    std::string s;
-    s = " [" + std::to_string(error) + "] " + msg + '\n';
-    std::cerr << s << std::endl;
-}
-
-
-// checks if something is an instance of something
-template<typename Base, typename T>
-inline bool instanceof(const T *ptr) {
-   return dynamic_cast<const Base*>(ptr) != nullptr;
-}
-
 // worker table display column enums
 enum WorkerTableColumns{
 	WorkerSelect,
@@ -38,24 +24,8 @@ enum WorkerTableColumns{
 	WorkerUpgrade
 };
 
-// HelpMarker
-static void HelpMarker(const char* desc)
-{
-    ImGui::TextDisabled("(?)");
-    if (ImGui::IsItemHovered())
-    {
-        ImGui::BeginTooltip();
-        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-        ImGui::TextUnformatted(desc);
-        ImGui::PopTextWrapPos();
-        ImGui::EndTooltip();
-    }
-}
-
-
 int main()
 {
-	glfwSetErrorCallback( error_callback );
 	// Initialize GLFW
 	if(!glfwInit()){
 		std::cout << "Failed init glfw" << std::endl;
@@ -233,6 +203,7 @@ int main()
 		ImGui::SetNextWindowSize(ImVec2(315, 200), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowPos(ImVec2(400,60), ImGuiCond_FirstUseEver);
 		
+		// statistics window
 		ImGui::Begin("Statistics - Graphs (last 240 ticks)");
 		ImGui::PlotLines("Gold Balance", goldHistoryBuffer, end - start, NULL, NULL, minGold, maxGold, ImVec2(0, 50));
 		ImGui::PlotLines("Score", scoresBuffer, end - start, NULL, NULL, minScore, maxScore, ImVec2(0, 50));
@@ -243,6 +214,7 @@ int main()
 		ImGui::SetNextWindowSize(ImVec2(315, 300), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowPos(ImVec2(60,300), ImGuiCond_FirstUseEver);
 		
+		// shop window
 		ImGui::Begin("Shop");
 
 		char buyWorkerText[20];
@@ -275,6 +247,7 @@ int main()
 			}
 		}
 
+		// button to supply power
 		char supplyingPowerText[30];
 		std::sprintf(supplyingPowerText, "Supply Power %.1f G", (g.poweringBasePrice * g.powerableTools));
 		if(ImGui::Button(supplyingPowerText)){
@@ -329,7 +302,7 @@ int main()
 					PowerTool* pt = static_cast<PowerTool*>(g.toolShop[i]);
 					ImGui::Text("Powered g/tick: %f\n", pt->poweredMultiplier + pt->getBaseRate());
 					double upMultiplier = 3;
-					if(instanceof<MegaDrill>(g.toolShop[i])){
+					if(dynamic_cast<const MegaDrill*>(g.toolShop[i]) != nullptr){
 						upMultiplier = 5;
 					}
 					ImGui::Text("Upgraded + Powered g/tick: %f\n", upMultiplier * (pt->poweredMultiplier + pt->getBaseRate()));
@@ -347,7 +320,16 @@ int main()
 
 		ImGui::Begin("Workers");
 		ImGui::Text("Selected Worker: %d", selectedWorker->id);
-		ImGui::SameLine(); HelpMarker("Select a worker by clicking on a worker ID");
+		ImGui::SameLine(); // HelpMarker("Select a worker by clicking on a worker ID");
+		ImGui::TextDisabled("(?)");
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted("Select a worker by clicking on a worker ID");
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
 
 		// Options
 		static ImGuiTableFlags flags =
@@ -370,19 +352,6 @@ int main()
 			ImGui::TableSetupColumn("Upgrade", ImGuiTableColumnFlags_PreferSortDescending | ImGuiTableColumnFlags_WidthStretch, 0.0f, WorkerUpgrade);
 			ImGui::TableSetupScrollFreeze(0, 1); // Make row always visible
 			ImGui::TableHeadersRow();
-
-			// TODO: Sort our data if sort specs have been changed!
-
-			// SortSpecCache* cache = SortSpecCache::getInstance();
-			// if (ImGuiTableSortSpecs* sorts_specs = ImGui::TableGetSortSpecs())
-			// 	if (sorts_specs->SpecsDirty)
-			// 	{
-			// 		cache->s_current_sort_specs = sorts_specs; // Store in variable accessible by the sort function.
-			// 		if (g.workers.size() > 1)
-			// 			qsort(&g.workers[0], (size_t)g.workers.size(), sizeof(g.workers[0]), compareWorkers);
-			// 		cache->s_current_sort_specs = NULL;
-			// 		sorts_specs->SpecsDirty = false;
-			// 	}
 
 			// Demonstrate using clipper for large vertical lists
 			ImGuiListClipper clipper;
